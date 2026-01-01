@@ -48,15 +48,16 @@ export default function Login() {
                 })
             });
             setSuccess(res.message);
-            // Auto login after 1.5s
-            setTimeout(async () => {
-                try {
-                    await login({ role: 'borrower', nama: formData.nama });
-                    navigate('/dashboard');
-                } catch (e) {
-                    setIsRegister(false); // Go to login if auto-login fails
-                }
-            }, 1500);
+
+            // Log the user in immediately using the returned data
+            localStorage.setItem('token', res.token);
+            localStorage.setItem('user', JSON.stringify(res.user));
+
+            // Use window.location as a reliable way to reload state or just use navigate + manual state update
+            setTimeout(() => {
+                navigate('/dashboard');
+                window.location.reload(); // Quickest way to ensure AuthContext picks up new localStorage
+            }, 1000);
 
         } catch (err) {
             setError(err.message);

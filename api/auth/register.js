@@ -1,5 +1,6 @@
 import pool from '../db.js';
-import { allowCors } from '../utils.js';
+import { allowCors, signToken } from '../utils.js';
+
 
 async function handler(req, res) {
     if (req.method !== 'POST') {
@@ -25,7 +26,18 @@ async function handler(req, res) {
         );
 
         const newUser = result.rows[0];
-        return res.status(201).json({ message: 'Registrasi berhasil', user: newUser });
+        const token = signToken({ id: newUser.id_user, role: 'borrower', name: newUser.nama });
+
+        return res.status(201).json({
+            message: 'Registrasi berhasil',
+            token,
+            user: {
+                id: newUser.id_user,
+                name: newUser.nama,
+                role: 'borrower',
+                kelas: newUser.kelas
+            }
+        });
 
     } catch (error) {
         console.error('Register error:', error);

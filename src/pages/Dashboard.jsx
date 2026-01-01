@@ -5,6 +5,7 @@ import { Card, CardContent } from '../components/ui/Card';
 import { Package, Clock, CheckCircle, AlertCircle, ArrowRight } from 'lucide-react';
 import { Button } from '../components/ui/Button';
 import { Link } from 'react-router-dom';
+import { FloorPlan } from '../components/FloorPlan';
 
 export default function Dashboard() {
     const { user } = useAuth();
@@ -159,6 +160,9 @@ export default function Dashboard() {
                             </div>
                         </div>
                     </div>
+
+                    {/* Floor Plan Section */}
+                    <FloorPlan />
 
                     {/* Stats Overview - Only for logged in borrowers */}
                     {user && (

@@ -9,6 +9,7 @@ import { Card, CardContent, CardFooter } from '../components/ui/Card';
 import { ShoppingCart, Plus, Edit, Trash2, Search, Beaker, X, Save, AlertCircle } from 'lucide-react';
 import { cn } from '../lib/utils';
 import { useNavigate } from 'react-router-dom';
+import { FloorPlan } from '../components/FloorPlan';
 
 export default function Alat() {
     const { user } = useAuth();
