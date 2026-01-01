@@ -12,6 +12,7 @@ export default function CartPage() {
     const { cart, removeFromCart, clearCart } = useCart();
     const navigate = useNavigate();
     const [loading, setLoading] = useState(false);
+    const [durasi, setDurasi] = useState(7); // Default 7 hari
 
     async function handleCheckout() {
         if (!user) {
@@ -21,7 +22,8 @@ export default function CartPage() {
         setLoading(true);
         try {
             const payload = {
-                items: cart.map(item => ({ id_alat: item.id_alat, jumlah: 1 }))
+                items: cart.map(item => ({ id_alat: item.id_alat, jumlah: 1 })),
+                durasi: parseInt(durasi)
             };
             await fetchApi('/peminjaman', {
                 method: 'POST',
@@ -93,6 +95,23 @@ export default function CartPage() {
                             <div className="flex justify-between items-center text-slate-600">
                                 <span>Total Alat</span>
                                 <span className="font-bold text-slate-900">{cart.length} item</span>
+                            </div>
+
+                            <div className="space-y-2">
+                                <label className="text-sm font-semibold text-slate-700">Durasi Peminjaman</label>
+                                <select
+                                    className="w-full h-10 rounded-lg border border-slate-200 bg-white px-3 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500"
+                                    value={durasi}
+                                    onChange={(e) => setDurasi(e.target.value)}
+                                >
+                                    <option value={3}>3 Hari (Singkat)</option>
+                                    <option value={7}>7 Hari (Standar)</option>
+                                    <option value={14}>14 Hari (Lama)</option>
+                                    <option value={30}>30 Hari (Spesial)</option>
+                                </select>
+                                <p className="text-[10px] text-slate-400">
+                                    Denda Rp 5.000/hari jika melewati batas waktu.
+                                </p>
                             </div>
 
                             <div className="pt-4 space-y-3">

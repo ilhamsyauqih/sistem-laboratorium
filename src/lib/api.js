@@ -9,21 +9,27 @@ export async function fetchApi(endpoint, options = {}) {
         ...options.headers,
     };
 
-    const response = await fetch(`${API_URL}${endpoint}`, {
-        ...options,
-        headers,
-    });
+    try {
+        const response = await fetch(`${API_URL}${endpoint}`, {
+            ...options,
+            headers,
+        });
 
-    if (response.status === 401) {
-        // Handle unauthorized (optional: logout user logic here or in context)
-        // For now just return response to let caller handle it
+        if (response.status === 401) {
+            // Handle unauthorized (optional: logout user logic here or in context)
+            // For now just return response to let caller handle it
+        }
+
+        const data = await response.json().catch(() => ({}));
+
+        if (!response.ok) {
+            console.error('API Error:', { status: response.status, data });
+            throw new Error(data.message || `HTTP ${response.status}: ${response.statusText}`);
+        }
+
+        return data;
+    } catch (error) {
+        console.error('Fetch error:', error);
+        throw error;
     }
-
-    const data = await response.json().catch(() => ({}));
-
-    if (!response.ok) {
-        throw new Error(data.message || 'Something went wrong');
-    }
-
-    return data;
 }

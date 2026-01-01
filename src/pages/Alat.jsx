@@ -54,18 +54,25 @@ export default function Alat() {
     async function handleSubmit(e) {
         e.preventDefault();
         try {
+            console.log('Submitting formData:', formData);
+            console.log('Image URL length:', formData.gambar_url?.length || 0);
+
             const url = editId ? `/alat/${editId}` : '/alat';
             const method = editId ? 'PUT' : 'POST';
-            await fetchApi(url, {
+            const result = await fetchApi(url, {
                 method,
                 body: JSON.stringify(formData)
             });
+
+            console.log('Save result:', result);
+
             setModalOpen(false);
             setEditId(null);
             setFormData({ nama_alat: '', kode_alat: '', kondisi: 'Baik', lokasi: '', status: 'Tersedia', gambar_url: '' });
             setImagePreview(null);
             loadAlat();
         } catch (error) {
+            console.error('Save error:', error);
             alert(error.message);
         }
     }

@@ -39,9 +39,17 @@ async function handler(req, res) {
                 );
 
             } else if (action === 'return') {
-                // Create pengembalian record
+                // Calculate denda based on delay (Rp 5,000 per day)
+                // We'll use a subquery to get tanggal_kembali_rencana and calculate difference
                 await client.query(
-                    'INSERT INTO pengembalian (id_peminjam, kondisi_kembali, catatan_pengembalian) VALUES ($1, $2, $3)',
+                    `INSERT INTO pengembalian (id_peminjam, kondisi_kembali, catatan_pengembalian, denda)
+                     SELECT $1, $2, $3, 
+                            CASE 
+                                WHEN CURRENT_TIMESTAMP > p.tanggal_kembali_rencana THEN 
+                                     CEIL(EXTRACT(EPOCH FROM (CURRENT_TIMESTAMP - p.tanggal_kembali_rencana)) / 86400) * 5000
+                                ELSE 0 
+                            END
+                     FROM peminjaman p WHERE p.id_peminjam = $1`,
                     [id, kondisi_kembali || 'Baik', catatan_pengembalian]
                 );
 

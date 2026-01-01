@@ -26,7 +26,7 @@ async function handler(req, res) {
             return res.status(200).json(result.rows[0]);
         } catch (error) {
             console.error('Error updating alat:', error);
-            return res.status(500).json({ message: 'Internal Server Error' });
+            return res.status(500).json({ message: error.message || 'Internal Server Error' });
         }
     } else if (req.method === 'DELETE') {
         try {

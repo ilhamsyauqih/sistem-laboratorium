@@ -30,7 +30,7 @@ async function handler(req, res) {
             // Fetch details for each loan - this is N+1 but acceptable for small scale or we can use JSON_AGG
             // Using JSON_AGG is better.
             query = `
-        SELECT p.*, u.nama as nama_peminjam, pt.nama_petugas,
+        SELECT p.*, u.nama as nama_peminjam, pt.nama_petugas, pg.tanggal_kembali, pg.denda,
                (
                  SELECT json_agg(json_build_object(
                    'id_detail', d.id_detail,
@@ -47,6 +47,7 @@ async function handler(req, res) {
         FROM peminjaman p
         LEFT JOIN users u ON p.id_user = u.id_user
         LEFT JOIN petugas pt ON p.id_petugas = pt.id_petugas
+        LEFT JOIN pengembalian pg ON p.id_peminjam = pg.id_peminjam
       `;
 
             params.length = 0;
@@ -73,7 +74,8 @@ async function handler(req, res) {
             return res.status(403).json({ message: 'Only borrowers can request' });
         }
 
-        const { items } = req.body; // [{ id_alat }] - amount is 1 for unique items usually? Table has 'jumlah'.
+        const { items, durasi = 7 } = req.body;
+        // [{ id_alat }] - amount is 1 for unique items usually? Table has 'jumlah'.
         // `alat_laboratorium` implies unique items if they have `kode_alat`. 
         // Usually unique items have detail quantity = 1.
         // However, table `detail_peminjaman` has `jumlah`.
@@ -90,10 +92,10 @@ async function handler(req, res) {
         try {
             await client.query('BEGIN');
 
-            // Create peminjaman
+            // Create peminjaman with custom loan period
             const peminjamanRes = await client.query(
-                'INSERT INTO peminjaman (id_user, status_pinjam) VALUES ($1, $2) RETURNING id_peminjam',
-                [user.id, 'Diajukan']
+                "INSERT INTO peminjaman (id_user, status_pinjam, tanggal_kembali_rencana) VALUES ($1, $2, CURRENT_TIMESTAMP + ($3 || ' days')::interval) RETURNING id_peminjam",
+                [user.id, 'Diajukan', durasi]
             );
             const idPeminjam = peminjamanRes.rows[0].id_peminjam;
 

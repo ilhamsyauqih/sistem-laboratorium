@@ -65,7 +65,7 @@ async function handler(req, res) {
             return res.status(201).json(result.rows[0]);
         } catch (error) {
             console.error('Error creating alat:', error);
-            return res.status(500).json({ message: 'Internal Server Error' });
+            return res.status(500).json({ message: error.message || 'Internal Server Error' });
         }
     } else {
         return res.status(405).json({ message: 'Method Not Allowed' });

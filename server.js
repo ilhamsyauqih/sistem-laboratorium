@@ -10,7 +10,9 @@ const app = express();
 const PORT = 3000;
 
 app.use(cors());
-app.use(express.json());
+// Increase limit to 10MB for base64 images
+app.use(express.json({ limit: '10mb' }));
+app.use(express.urlencoded({ limit: '10mb', extended: true }));
 
 // Helper to wrap Vercel-style async handlers
 const wrap = (handler) => async (req, res) => {
@@ -46,6 +48,11 @@ const importHandler = async (relativePath) => {
 // /api/auth/login
 app.post('/api/auth/login', async (req, res) => {
     const handler = await importHandler('./api/auth/login.js');
+    wrap(handler)(req, res);
+});
+
+app.post('/api/auth/register', async (req, res) => {
+    const handler = await importHandler('./api/auth/register.js');
     wrap(handler)(req, res);
 });
 

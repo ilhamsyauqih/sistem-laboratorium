@@ -45,6 +45,7 @@ CREATE TABLE peminjaman (
     id_user INTEGER REFERENCES users(id_user) ON DELETE CASCADE,
     id_petugas INTEGER REFERENCES petugas(id_petugas), -- Can be null if request not yet approved, or strictly assigned
     tanggal_pinjam TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    tanggal_kembali_rencana TIMESTAMP, -- Target return date
     status_pinjam VARCHAR(50) DEFAULT 'Diajukan' CHECK (status_pinjam IN ('Diajukan', 'Disetujui', 'Ditolak', 'Dipinjam', 'Selesai'))
 );
 
@@ -63,5 +64,6 @@ CREATE TABLE pengembalian (
     id_peminjam INTEGER REFERENCES peminjaman(id_peminjam) ON DELETE CASCADE,
     tanggal_kembali TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     kondisi_kembali VARCHAR(100),
-    catatan_pengembalian TEXT
+    catatan_pengembalian TEXT,
+    denda DECIMAL(10, 2) DEFAULT 0
 );
