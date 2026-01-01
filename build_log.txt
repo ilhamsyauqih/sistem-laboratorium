@@ -1,0 +1,29 @@
+
+> sistem-laboratorium@0.0.0 build
+> vite build
+
+vite v7.3.0 building client environment for production...
+transforming...
+✓ 2030 modules transformed.
+✗ Build failed in 7.16s
+error during build:
+src/pages/Alat.jsx (6:28): "CardFooter" is not exported by "src/components/ui/Card.jsx", imported by "src/pages/Alat.jsx".
+file: /opt/lampp/htdocs/sistem-laboratorium/src/pages/Alat.jsx:6:28
+
+4: import { Button } from '../components/ui/Button';
+5: import { Input } from '../components/ui/Input';
+6: import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '../components/ui/Card';
+                               ^
+7: import { ShoppingCart, Plus, Edit, Trash2 } from 'lucide-react';
+8: import { cn } from '../lib/utils';
+
+    at getRollupError (file:///opt/lampp/htdocs/sistem-laboratorium/node_modules/rollup/dist/es/shared/parseAst.js:401:41)
+    at error (file:///opt/lampp/htdocs/sistem-laboratorium/node_modules/rollup/dist/es/shared/parseAst.js:397:42)
+    at Module.error (file:///opt/lampp/htdocs/sistem-laboratorium/node_modules/rollup/dist/es/shared/node-entry.js:17022:16)
+    at Module.traceVariable (file:///opt/lampp/htdocs/sistem-laboratorium/node_modules/rollup/dist/es/shared/node-entry.js:17478:29)
+    at ModuleScope.findVariable (file:///opt/lampp/htdocs/sistem-laboratorium/node_modules/rollup/dist/es/shared/node-entry.js:15141:39)
+    at FunctionScope.findVariable (file:///opt/lampp/htdocs/sistem-laboratorium/node_modules/rollup/dist/es/shared/node-entry.js:5688:38)
+    at FunctionBodyScope.findVariable (file:///opt/lampp/htdocs/sistem-laboratorium/node_modules/rollup/dist/es/shared/node-entry.js:5688:38)
+    at ReturnValueScope.findVariable (file:///opt/lampp/htdocs/sistem-laboratorium/node_modules/rollup/dist/es/shared/node-entry.js:5688:38)
+    at FunctionBodyScope.findVariable (file:///opt/lampp/htdocs/sistem-laboratorium/node_modules/rollup/dist/es/shared/node-entry.js:5688:38)
+    at Identifier.bind (file:///opt/lampp/htdocs/sistem-laboratorium/node_modules/rollup/dist/es/shared/node-entry.js:5462:40)
