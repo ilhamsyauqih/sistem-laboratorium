@@ -56,7 +56,12 @@ async function handler(req, res) {
             return res.status(200).json({ message: 'Alat deleted' });
         } catch (error) {
             console.error('Error deleting alat:', error);
-            return res.status(500).json({ message: 'Internal Server Error' });
+            if (error.code === '23503') {
+                return res.status(409).json({
+                    message: 'Tidak dapat menghapus alat ini karena masih memiliki riwayat peminjaman. Silakan ubah status menjadi Rusak/Tidak Tersedia.'
+                });
+            }
+            return res.status(500).json({ message: 'Internal Server Error: ' + error.message });
         }
     } else {
         return res.status(405).json({ message: `Method ${req.method} Not Allowed` });
