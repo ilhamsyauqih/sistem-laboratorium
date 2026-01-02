@@ -4,13 +4,20 @@ import { fetchApi } from '../lib/api';
 import { Card, CardContent } from '../components/ui/Card';
 import { Package, Clock, CheckCircle, AlertCircle, ArrowRight } from 'lucide-react';
 import { Button } from '../components/ui/Button';
-import { Link } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { FloorPlan } from '../components/FloorPlan';
+import { FluidSearch } from '../components/ui/FluidSearch';
+import { AIRecommendationList } from '../components/AIRecommendationList';
 
 export default function Dashboard() {
     const { user } = useAuth();
+    const navigate = useNavigate();
     const [stats, setStats] = useState(null);
     const [loading, setLoading] = useState(true);
+
+    // AI State
+    const [aiLoading, setAiLoading] = useState(false);
+    const [aiResult, setAiResult] = useState(null); // { analysis: "", recommendations: [] }
 
     useEffect(() => {
         async function loadStats() {
@@ -30,6 +37,26 @@ export default function Dashboard() {
         }
         loadStats();
     }, [user]);
+
+    async function handleAiSearch(query) {
+        if (!query.trim()) return;
+
+        setAiLoading(true);
+        setAiResult(null);
+
+        try {
+            const data = await fetchApi('/ai-recommendation', {
+                method: 'POST',
+                body: JSON.stringify({ projectDescription: query })
+            });
+            setAiResult(data);
+        } catch (error) {
+            console.error(error);
+            alert('Failed to get AI recommendations: ' + error.message);
+        } finally {
+            setAiLoading(false);
+        }
+    }
 
     if (loading) return <div className="p-8 text-center text-slate-500">Memuat data...</div>;
 
@@ -127,12 +154,25 @@ export default function Dashboard() {
                                     {user ? `✨ Selamat Datang, ${user.name}` : '✨ Selamat Datang di LabSystem'}
                                 </div>
                                 <h1 className="text-4xl font-extrabold tracking-tight text-slate-900 sm:text-5xl">
-                                    Sistem Laboratorium
+                                    Sistem Laboratorium Sekolah
                                     <span className="block text-primary-600">Terpadu & Modern</span>
                                 </h1>
                                 <p className="text-lg text-slate-600">
                                     Pinjam alat praktikum dengan mudah, cek ketersediaan, dan kembalikan tepat waktu.
                                 </p>
+                                <div className="w-full max-w-md pt-6">
+                                    <FluidSearch
+                                        placeholder="Jelaskan kebutuhan proyekmu..."
+                                        size="large"
+                                        actionLabel="Cari dengan AI"
+                                        className="shadow-xl"
+                                        loading={aiLoading}
+                                        onSubmit={handleAiSearch}
+                                    />
+                                    <p className="text-xs text-slate-500 mt-2 pl-4">
+                                        Contoh: "Sistem irigasi otomatis dengan sensor kelembaban"
+                                    </p>
+                                </div>
                                 <div className="flex gap-4 pt-2">
                                     <Link to="/alat">
                                         <Button size="lg" className="rounded-full px-8">
@@ -160,6 +200,14 @@ export default function Dashboard() {
                             </div>
                         </div>
                     </div>
+
+                    {/* AI Recommendations Section */}
+                    {aiResult && (
+                        <AIRecommendationList
+                            analysis={aiResult.analysis}
+                            recommendations={aiResult.recommendations}
+                        />
+                    )}
 
                     {/* Floor Plan Section */}
                     <FloorPlan />

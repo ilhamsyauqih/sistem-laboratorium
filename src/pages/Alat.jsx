@@ -8,16 +8,18 @@ import { Input } from '../components/ui/Input';
 import { Card, CardContent, CardFooter } from '../components/ui/Card';
 import { ShoppingCart, Plus, Edit, Trash2, Search, Beaker, X, Save, AlertCircle } from 'lucide-react';
 import { cn } from '../lib/utils';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { FloorPlan } from '../components/FloorPlan';
+import { FluidSearch } from '../components/ui/FluidSearch';
 
 export default function Alat() {
     const { user } = useAuth();
     const navigate = useNavigate();
+    const [searchParams] = useSearchParams();
     const { cart, addToCart, removeFromCart } = useCart();
     const [alat, setAlat] = useState([]);
     const [loading, setLoading] = useState(true);
-    const [search, setSearch] = useState('');
+    const [search, setSearch] = useState(searchParams.get('q') || '');
     const [modalOpen, setModalOpen] = useState(false);
 
     // Form State for Admin
@@ -145,13 +147,13 @@ export default function Alat() {
             </div>
 
             {/* Search & Filter */}
-            <div className="relative group">
-                <Search className="absolute left-4 top-3.5 h-5 w-5 text-slate-400 group-focus-within:text-primary-500 transition-colors" />
-                <Input
+            <div className="w-full max-w-lg">
+                <FluidSearch
                     placeholder="Cari nama alat, kode, atau lokasi..."
                     value={search}
-                    onChange={e => setSearch(e.target.value)}
-                    className="pl-12 h-12 w-full md:w-96 rounded-full border-slate-200 bg-white shadow-sm focus:border-primary-500 focus:ring-primary-500 hover:border-primary-300 transition-all text-base"
+                    onChange={(e) => setSearch(e.target.value)}
+                    size="large"
+                    actionLabel="Cari"
                 />
             </div>
 

@@ -8,6 +8,7 @@ import { Check, X, Printer, Clock, User, Package, Calendar, FileText, CheckCircl
 import { cn } from '../lib/utils';
 import { format, differenceInDays, isAfter } from 'date-fns';
 import { id as localeId } from 'date-fns/locale';
+import { FluidSearch } from '../components/ui/FluidSearch';
 
 const formatIDR = (amount) => {
     return new Intl.NumberFormat('id-ID', {
@@ -23,6 +24,7 @@ export default function Peminjaman() {
     const [loading, setLoading] = useState(true);
     const [returnModal, setReturnModal] = useState(null);
     const [filter, setFilter] = useState('all'); // all, pending, approved, returned
+    const [search, setSearch] = useState('');
 
     useEffect(() => {
         loadLoans();
@@ -94,6 +96,12 @@ export default function Peminjaman() {
     };
 
     const filteredLoans = loans.filter(loan => {
+        const matchesSearch = search.toLowerCase() === '' ||
+            loan.nama_peminjam.toLowerCase().includes(search.toLowerCase()) ||
+            loan.details.some(d => d.nama_alat.toLowerCase().includes(search.toLowerCase()));
+
+        if (!matchesSearch) return false;
+
         if (filter === 'all') return true;
         if (filter === 'pending') return loan.status_pinjam === 'Diajukan';
         if (filter === 'approved') return loan.status_pinjam === 'Dipinjam' || loan.status_pinjam === 'Disetujui';
@@ -124,27 +132,37 @@ export default function Peminjaman() {
                 )}
             </div>
 
-            {/* Filters */}
-            <div className="flex gap-2 overflow-x-auto pb-2 print:hidden">
-                {[
-                    { key: 'all', label: 'Semua', count: loans.length },
-                    { key: 'pending', label: 'Menunggu', count: loans.filter(l => l.status_pinjam === 'Diajukan').length },
-                    { key: 'approved', label: 'Dipinjam', count: loans.filter(l => l.status_pinjam === 'Dipinjam' || l.status_pinjam === 'Disetujui').length },
-                    { key: 'returned', label: 'Selesai', count: loans.filter(l => l.status_pinjam === 'Selesai').length },
-                ].map(({ key, label, count }) => (
-                    <button
-                        key={key}
-                        onClick={() => setFilter(key)}
-                        className={cn(
-                            "px-4 py-2 rounded-lg text-sm font-medium transition-all whitespace-nowrap",
-                            filter === key
-                                ? "bg-primary-600 text-white shadow-sm"
-                                : "bg-white text-slate-600 hover:bg-slate-50 border border-slate-200"
-                        )}
-                    >
-                        {label} <span className="ml-1.5 opacity-75">({count})</span>
-                    </button>
-                ))}
+            {/* Filters & Search */}
+            <div className="flex flex-col md:flex-row gap-4 items-start md:items-center justify-between print:hidden">
+                <div className="flex gap-2 overflow-x-auto pb-2">
+                    {[
+                        { key: 'all', label: 'Semua', count: loans.length },
+                        { key: 'pending', label: 'Menunggu', count: loans.filter(l => l.status_pinjam === 'Diajukan').length },
+                        { key: 'approved', label: 'Dipinjam', count: loans.filter(l => l.status_pinjam === 'Dipinjam' || l.status_pinjam === 'Disetujui').length },
+                        { key: 'returned', label: 'Selesai', count: loans.filter(l => l.status_pinjam === 'Selesai').length },
+                    ].map(({ key, label, count }) => (
+                        <button
+                            key={key}
+                            onClick={() => setFilter(key)}
+                            className={cn(
+                                "px-4 py-2 rounded-lg text-sm font-medium transition-all whitespace-nowrap",
+                                filter === key
+                                    ? "bg-primary-600 text-white shadow-sm"
+                                    : "bg-white text-slate-600 hover:bg-slate-50 border border-slate-200"
+                            )}
+                        >
+                            {label} <span className="ml-1.5 opacity-75">({count})</span>
+                        </button>
+                    ))}
+                </div>
+
+                <div className="w-full md:w-72">
+                    <FluidSearch
+                        placeholder="Cari peminjam..."
+                        value={search}
+                        onChange={(e) => setSearch(e.target.value)}
+                    />
+                </div>
             </div>
 
             {/* Loans Grid */}
