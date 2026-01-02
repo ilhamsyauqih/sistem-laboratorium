@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Search, ArrowRight, Loader2 } from 'lucide-react';
+import { Search, ArrowRight, Loader2, Sparkles } from 'lucide-react';
 import { cn } from '../../lib/utils';
 
 export function FluidSearch({
@@ -34,27 +34,27 @@ export function FluidSearch({
         <form
             onSubmit={handleSubmit}
             className={cn(
-                "relative flex items-center w-full transition-all duration-300 ease-out z-20",
-                size === 'large' ? 'h-14' : 'h-12',
+                "relative flex items-center w-full transition-all duration-500 ease-out z-20 group",
+                size === 'large' ? 'h-16' : 'h-12',
                 className
             )}
         >
             {/* Background & Shadow */}
             <div
                 className={cn(
-                    "absolute inset-0 rounded-full transition-all duration-300",
+                    "absolute inset-0 rounded-full transition-all duration-500 ease-in-out border",
                     isFocused
-                        ? "bg-white shadow-xl ring-2 ring-primary-100 scale-[1.01]"
-                        : "bg-white border border-slate-200 shadow-lg hover:border-primary-300 hover:shadow-xl"
+                        ? "bg-white border-primary-200 shadow-[0_8px_40px_-12px_rgba(37,99,235,0.2)] scale-[1.02]"
+                        : "bg-white border-slate-100 shadow-[0_8px_30px_rgb(0,0,0,0.04)] hover:border-slate-200 hover:shadow-[0_8px_30px_rgb(0,0,0,0.08)]"
                 )}
             />
 
-            {/* Icon */}
-            <div className="absolute left-4 z-10 pointer-events-none flex items-center justify-center">
-                <Search
+            {/* Icon (Gemini Style) */}
+            <div className="absolute left-5 z-10 pointer-events-none flex items-center justify-center">
+                <Sparkles
                     className={cn(
-                        "transition-colors duration-300",
-                        isFocused ? "text-primary-600" : "text-slate-400",
+                        "transition-all duration-500",
+                        isFocused ? "text-primary-600 rotate-12 scale-110" : "text-slate-400",
                         size === 'large' ? 'w-6 h-6' : 'w-5 h-5'
                     )}
                 />
@@ -71,8 +71,8 @@ export function FluidSearch({
                 autoFocus={autoFocus}
                 className={cn(
                     "w-full h-full bg-transparent relative z-[5] rounded-full focus:outline-none transition-all placeholder:text-slate-400 text-slate-700",
-                    size === 'large' ? 'pl-14 pr-24 text-lg' : 'pl-10 pr-20 text-base', // Adjusted padding
-                    actionLabel && (size === 'large' ? 'pr-32' : 'pr-24') // More padding for text button
+                    size === 'large' ? 'pl-16 text-lg' : 'pl-12 text-base',
+                    actionLabel && (size === 'large' ? 'pr-48' : 'pr-32') // Increased padding to prevent overlap
                 )}
             />
 
@@ -83,27 +83,28 @@ export function FluidSearch({
                         type="submit"
                         disabled={loading || !(activeValue)}
                         className={cn(
-                            "px-6 rounded-full font-semibold text-white transition-all duration-300 shadow-md flex items-center justify-center gap-2",
-                            size === 'large' ? 'h-10 text-base' : 'h-8 text-sm',
-                            "bg-primary-600 hover:bg-primary-700 hover:shadow-lg active:scale-95",
+                            "px-8 rounded-full font-bold text-white transition-all duration-300 shadow-lg flex items-center justify-center gap-2",
+                            size === 'large' ? 'h-12 text-base' : 'h-9 text-sm',
+                            "bg-gradient-to-r from-primary-600 to-blue-600 hover:from-primary-500 hover:to-blue-500",
+                            "hover:shadow-primary-500/25 hover:translate-y-[-1px] active:translate-y-[1px]",
                             loading && "opacity-80 cursor-wait"
                         )}
                     >
-                        {loading ? <Loader2 className="animate-spin h-4 w-4" /> : null}
+                        {loading ? <Loader2 className="animate-spin h-5 w-5" /> : null}
                         {loading ? 'Thinking...' : actionLabel}
                     </button>
                 ) : (
                     <button
                         type="submit"
                         className={cn(
-                            "p-2 rounded-full transition-all duration-300 flex items-center justify-center",
+                            "p-3 rounded-full transition-all duration-300 flex items-center justify-center",
                             activeValue
-                                ? "bg-primary-600 text-white shadow-md hover:bg-primary-700 hover:scale-110 active:scale-95 cursor-pointer"
+                                ? "bg-primary-600 text-white shadow-lg hover:bg-primary-500 hover:scale-110 active:scale-95 cursor-pointer"
                                 : "bg-slate-100 text-slate-300 cursor-default"
                         )}
                         disabled={!activeValue || loading}
                     >
-                        {loading ? <Loader2 className="animate-spin h-4 w-4" /> : <ArrowRight size={size === 'large' ? 20 : 16} />}
+                        {loading ? <Loader2 className="animate-spin h-5 w-5" /> : <ArrowRight size={20} />}
                     </button>
                 )}
             </div>
