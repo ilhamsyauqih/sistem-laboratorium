@@ -74,7 +74,7 @@ app.get('/api/alat', async (req, res) => {
     wrap(handler)(req, res);
 });
 app.post('/api/alat', async (req, res) => {
-    const handler = await importHandler('./api/alat.js');
+    const handler = await importHandler('./api/alat/index.js');
     wrap(handler)(req, res);
 });
 

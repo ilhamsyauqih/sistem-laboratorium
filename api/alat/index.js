@@ -1,5 +1,5 @@
-import pool from './db.js';
-import { allowCors, verifyToken } from './utils.js';
+import pool from '../db.js';
+import { allowCors, verifyToken } from '../utils.js';
 
 async function handler(req, res) {
     // Check Auth
