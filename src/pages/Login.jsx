@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import { useAuth } from '../context/AuthContext';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { Button } from '../components/ui/Button';
 import { Input } from '../components/ui/Input';
 import { Card, CardContent, CardHeader, CardTitle } from '../components/ui/Card';
-import { Beaker } from 'lucide-react';
+import { Beaker, AlertCircle } from 'lucide-react';
 import { fetchApi } from '../lib/api';
 import FadeIn from '../components/animations/FadeIn';
 
@@ -14,8 +14,18 @@ export default function Login() {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
     const [success, setSuccess] = useState('');
+    const [info, setInfo] = useState('');
     const { login } = useAuth();
     const navigate = useNavigate();
+    const location = useLocation();
+
+    React.useEffect(() => {
+        if (location.state?.message) {
+            setInfo(location.state.message);
+            // Clear state so refresh doesn't show it again
+            window.history.replaceState({}, document.title);
+        }
+    }, [location]);
 
     const [formData, setFormData] = useState({
         nama: '',
@@ -137,6 +147,12 @@ export default function Login() {
                             )}
 
                             <form onSubmit={isRegister ? handleRegister : handleLogin} className="space-y-4">
+                                {info && (
+                                    <div className="bg-blue-50 text-blue-600 p-3 rounded-md text-sm border border-blue-100 flex items-center gap-2">
+                                        <AlertCircle size={16} />
+                                        {info}
+                                    </div>
+                                )}
                                 {error && (
                                     <div className="bg-red-50 text-red-600 p-3 rounded-md text-sm border border-red-100 flex items-center gap-2">
                                         <span className="block w-1 h-4 bg-red-600 rounded-full"></span>

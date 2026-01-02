@@ -76,6 +76,16 @@ export default function Dashboard() {
 
     const isAdmin = user?.role === 'admin';
 
+    const handleGuestAction = (e) => {
+        if (!user) {
+            e.preventDefault();
+            e.stopPropagation();
+            navigate('/login', {
+                state: { message: "Masuk untuk meminjam dan mengakses semua fitur!" }
+            });
+        }
+    };
+
     return (
         <div className="space-y-8">
             {/* Conditional Layout: Admin vs Other */}
@@ -183,7 +193,7 @@ export default function Dashboard() {
                                     <p className="text-lg text-slate-600">
                                         Pinjam alat praktikum dengan mudah, cek ketersediaan, dan kembalikan tepat waktu.
                                     </p>
-                                    <div className="w-full max-w-md pt-6">
+                                    <div className="w-full max-w-md pt-6" onClickCapture={handleGuestAction}>
                                         <FluidSearch
                                             placeholder="Jelaskan kebutuhan proyekmu..."
                                             size="large"
@@ -197,11 +207,13 @@ export default function Dashboard() {
                                         </p>
                                     </div>
                                     <div className="flex gap-4 pt-2">
-                                        <Link to="/alat">
-                                            <Button size="lg" className="rounded-full px-8">
-                                                Lihat Katalog <ArrowRight className="ml-2 h-4 w-4" />
-                                            </Button>
-                                        </Link>
+                                        <div onClickCapture={handleGuestAction}>
+                                            <Link to="/alat">
+                                                <Button size="lg" className="rounded-full px-8">
+                                                    Lihat Katalog <ArrowRight className="ml-2 h-4 w-4" />
+                                                </Button>
+                                            </Link>
+                                        </div>
                                         {user && (
                                             <Link to="/peminjaman">
                                                 <Button variant="outline" size="lg" className="rounded-full px-8">
@@ -269,22 +281,22 @@ export default function Dashboard() {
                     {/* Public Features Section for Guests */}
                     {!user && (
                         <FadeIn delay={0.3}>
-                            <div className="grid md:grid-cols-3 gap-8 py-12 border-t border-slate-100">
-                                <div className="space-y-4">
+                            <div className="grid md:grid-cols-3 gap-8 py-12 border-t border-slate-100" onClickCapture={handleGuestAction}>
+                                <div className="space-y-4 cursor-pointer hover:bg-slate-50 p-4 rounded-xl transition-colors">
                                     <div className="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center text-blue-600">
                                         <Package size={24} />
                                     </div>
                                     <h3 className="text-xl font-bold text-slate-900">Inventaris Lengkap</h3>
                                     <p className="text-slate-500">Katalog alat laboratorium yang selalu diperbarui dengan informasi stok real-time.</p>
                                 </div>
-                                <div className="space-y-4">
+                                <div className="space-y-4 cursor-pointer hover:bg-slate-50 p-4 rounded-xl transition-colors">
                                     <div className="w-12 h-12 bg-green-100 rounded-xl flex items-center justify-center text-green-600">
                                         <Clock size={24} />
                                     </div>
                                     <h3 className="text-xl font-bold text-slate-900">Peminjaman Mudah</h3>
                                     <p className="text-slate-500">Proses peminjaman digital yang cepat dan efisien tanpa formulir kertas.</p>
                                 </div>
-                                <div className="space-y-4">
+                                <div className="space-y-4 cursor-pointer hover:bg-slate-50 p-4 rounded-xl transition-colors">
                                     <div className="w-12 h-12 bg-purple-100 rounded-xl flex items-center justify-center text-purple-600">
                                         <CheckCircle size={24} />
                                     </div>

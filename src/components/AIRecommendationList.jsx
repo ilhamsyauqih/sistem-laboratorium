@@ -42,7 +42,7 @@ export function AIRecommendationList({ analysis, recommendations }) {
             </div>
 
             {/* Recommendations Grid */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 md:gap-6">
                 {recommendations.map((item) => (
                     <Card key={item.id} className="group overflow-hidden border-none shadow-sm hover:shadow-xl transition-all duration-300 bg-white rounded-2xl flex flex-col">
                         {/* Image */}
@@ -67,9 +67,9 @@ export function AIRecommendationList({ analysis, recommendations }) {
                             </div>
                         </div>
 
-                        <CardContent className="p-5 flex-1 space-y-3">
+                        <CardContent className="p-3 md:p-5 flex-1 space-y-3">
                             <div>
-                                <h4 className="font-bold text-slate-900 group-hover:text-primary-600 transition-colors line-clamp-1">{item.name}</h4>
+                                <h4 className="font-bold text-sm md:text-base text-slate-900 group-hover:text-primary-600 transition-colors line-clamp-1">{item.name}</h4>
                                 <div className="flex items-center gap-1 text-xs text-slate-500 mt-1">
                                     <MapPin size={12} /> {item.lokasi || 'Lab Utama'}
                                 </div>
@@ -83,7 +83,7 @@ export function AIRecommendationList({ analysis, recommendations }) {
                             </div>
                         </CardContent>
 
-                        <CardFooter className="p-5 pt-0 mt-auto">
+                        <CardFooter className="p-3 pt-0 md:p-5 md:pt-0 mt-auto">
                             <Button
                                 className={cn(
                                     "w-full transition-all shadow-sm hover:shadow",
