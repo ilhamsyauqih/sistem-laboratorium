@@ -7,6 +7,14 @@
     },
     "rewrites": [
         {
+            "source": "/api/alat/:id",
+            "destination": "/api/alat/id"
+        },
+        {
+            "source": "/api/peminjaman/:id",
+            "destination": "/api/peminjaman/id"
+        },
+        {
             "source": "/(.*)",
             "destination": "/index.html"
         }
