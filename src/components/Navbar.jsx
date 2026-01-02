@@ -6,6 +6,8 @@ import { Button } from './ui/Button';
 import { Menu, X, ShoppingCart, LogOut, User, Beaker } from 'lucide-react';
 import { cn } from '../lib/utils';
 
+import { NavSearch } from './ui/NavSearch';
+
 export default function Navbar() {
     const { user, logout } = useAuth();
     const { cart } = useCart();
@@ -27,8 +29,8 @@ export default function Navbar() {
     return (
         <nav className="bg-white border-b border-slate-100 sticky top-0 z-50 shadow-sm">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div className="flex justify-between h-16">
-                    <div className="flex items-center">
+                <div className="flex justify-between h-16 items-center">
+                    <div className="flex items-center shrink-0">
                         <Link to="/" className="flex-shrink-0 flex items-center gap-2">
                             <div className="bg-primary-600 text-white p-1.5 rounded-lg">
                                 <Beaker size={24} />
@@ -36,6 +38,8 @@ export default function Navbar() {
                             <span className="font-bold text-xl text-primary-900 tracking-tight">LabSystem</span>
                         </Link>
                     </div>
+
+                    <NavSearch />
 
                     {/* Desktop Menu */}
                     <div className="hidden md:flex items-center space-x-8">
