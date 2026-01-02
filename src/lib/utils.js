@@ -16,6 +16,8 @@ export async function compressImage(file, { quality = 0.7, maxWidth = 1200, type
 
         reader.onerror = (e) => reject(e);
 
+        image.onerror = (e) => reject(new Error('Failed to load image'));
+
         image.onload = () => {
             const canvas = document.createElement('canvas');
             let width = image.width;
@@ -48,5 +50,7 @@ export async function compressImage(file, { quality = 0.7, maxWidth = 1200, type
                 quality
             );
         };
+
+        reader.readAsDataURL(file);
     });
 }
