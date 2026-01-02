@@ -195,8 +195,12 @@ export default function Dashboard() {
                                     )}
                                 </div>
                             </div>
-                            <div className="hidden md:block w-64 h-64 bg-slate-100 rounded-full flex items-center justify-center text-slate-300">
-                                <Clock size={80} strokeWidth={1} />
+                            <div className="hidden md:block relative">
+                                <img
+                                    src="/images/hero-team.png"
+                                    alt="Tim Laboratorium"
+                                    className="h-full max-h-[350px] w-auto object-contain drop-shadow-xl hover:scale-105 transition-transform duration-500 rounded-lg"
+                                />
                             </div>
                         </div>
                     </div>
