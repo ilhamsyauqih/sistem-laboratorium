@@ -60,7 +60,7 @@ export default function Alat() {
             console.log('Submitting formData:', formData);
             console.log('Image URL length:', formData.gambar_url?.length || 0);
 
-            const url = editId ? `/alat/${editId}` : '/alat';
+            const url = editId ? `alat/${editId}` : 'alat';
             const method = editId ? 'PUT' : 'POST';
             const result = await fetchApi(url, {
                 method,
