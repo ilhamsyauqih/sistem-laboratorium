@@ -9,6 +9,8 @@ import { FloorPlan } from '../components/FloorPlan';
 import { FluidSearch } from '../components/ui/FluidSearch';
 import { AIRecommendationList } from '../components/AIRecommendationList';
 
+import LoadingSkeleton from '../components/animations/LoadingSkeleton';
+
 export default function Dashboard() {
     const { user } = useAuth();
     const navigate = useNavigate();
@@ -58,7 +60,18 @@ export default function Dashboard() {
         }
     }
 
-    if (loading) return <div className="p-8 text-center text-slate-500">Memuat data...</div>;
+    if (loading) return (
+        <div className="space-y-8">
+            <div className="flex justify-between items-center gap-4">
+                <LoadingSkeleton className="h-20 w-1/3" />
+                <LoadingSkeleton className="h-10 w-40" />
+            </div>
+            <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+                <LoadingSkeleton count={4} className="h-32" />
+            </div>
+            <LoadingSkeleton className="h-64 w-full" />
+        </div>
+    );
 
     const isAdmin = user?.role === 'admin';
 
