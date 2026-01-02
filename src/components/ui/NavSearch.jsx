@@ -103,7 +103,7 @@ export function NavSearch() {
             )}
 
             {/* Backdrop for cleaner focus */}
-            {isOpen && <div className="fixed inset-0 bg-slate-900/10 z-30 backdrop-blur-[1px]" />}
+            {isOpen && <div className="fixed inset-0 bg-slate-900/10 z-30 backdrop-blur-[1px]" onClick={() => setIsOpen(false)} />}
         </div>
     );
 }

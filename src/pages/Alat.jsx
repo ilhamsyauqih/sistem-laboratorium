@@ -39,6 +39,13 @@ export default function Alat() {
         loadAlat();
     }, []);
 
+    useEffect(() => {
+        const query = searchParams.get('q');
+        if (query !== null) {
+            setSearch(query);
+        }
+    }, [searchParams]);
+
     async function loadAlat() {
         try {
             const data = await fetchApi('/alat');
