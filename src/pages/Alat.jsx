@@ -52,7 +52,8 @@ export default function Alat() {
 
     const filteredAlat = alat.filter(item =>
         item.nama_alat.toLowerCase().includes(search.toLowerCase()) ||
-        item.kode_alat.toLowerCase().includes(search.toLowerCase())
+        item.kode_alat.toLowerCase().includes(search.toLowerCase()) ||
+        (item.lokasi && item.lokasi.toLowerCase().includes(search.toLowerCase()))
     );
 
     async function handleSubmit(e) {
