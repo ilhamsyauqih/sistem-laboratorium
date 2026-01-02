@@ -6,8 +6,8 @@ import { fetchApi } from '../lib/api';
 import { Button } from '../components/ui/Button';
 import { Input } from '../components/ui/Input';
 import { Card, CardContent, CardFooter } from '../components/ui/Card';
-import { ShoppingCart, Plus, Edit, Trash2, Search, Beaker, X, Save, AlertCircle } from 'lucide-react';
-import { cn } from '../lib/utils';
+import { ShoppingCart, Plus, Edit, Trash2, Search, Beaker, X, Save, AlertCircle, Loader2 } from 'lucide-react';
+import { cn, compressImage } from '../lib/utils';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { FloorPlan } from '../components/FloorPlan';
 import { FluidSearch } from '../components/ui/FluidSearch';
@@ -20,6 +20,7 @@ export default function Alat() {
     const [alat, setAlat] = useState([]);
     const [loading, setLoading] = useState(true);
     const [search, setSearch] = useState(searchParams.get('q') || '');
+    const [uploading, setUploading] = useState(false);
     const [modalOpen, setModalOpen] = useState(false);
 
     // Form State for Admin
@@ -113,43 +114,55 @@ export default function Alat() {
             };
             reader.readAsDataURL(file);
 
-            // Upload to Cloudinary
-            const cloudName = import.meta.env.VITE_CLOUDINARY_CLOUD_NAME;
-            const uploadPreset = import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET;
+            await uploadToCloudinary(file);
+        }
+    }
 
-            if (!cloudName || !uploadPreset) {
-                alert('Cloudinary configuration missing. Please contact administrator.');
-                return;
-            }
+    async function uploadToCloudinary(fileNumberOne) {
+        // Upload to Cloudinary
+        const cloudName = import.meta.env.VITE_CLOUDINARY_CLOUD_NAME;
+        const uploadPreset = import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET;
+
+        if (!cloudName || !uploadPreset) {
+            alert('Cloudinary configuration missing. Please contact administrator.');
+            return;
+        }
+
+        setUploading(true);
+
+        try {
+            // Compress image
+            const file = await compressImage(fileNumberOne);
 
             const formDataUpload = new FormData();
             formDataUpload.append('file', file);
             formDataUpload.append('upload_preset', uploadPreset);
             formDataUpload.append('folder', 'sistem-laboratorium/alat');
 
-            try {
-                const response = await fetch(
-                    `https://api.cloudinary.com/v1_1/${cloudName}/image/upload`,
-                    {
-                        method: 'POST',
-                        body: formDataUpload,
-                    }
-                );
-
-                if (!response.ok) {
-                    const errorData = await response.json();
-                    throw new Error(errorData.error?.message || 'Upload failed');
+            const response = await fetch(
+                `https://api.cloudinary.com/v1_1/${cloudName}/image/upload`,
+                {
+                    method: 'POST',
+                    body: formDataUpload,
                 }
+            );
 
-                const data = await response.json();
-                setFormData({ ...formData, gambar_url: data.secure_url });
-            } catch (error) {
-                console.error('Cloudinary upload error:', error);
-                alert(`Gagal mengupload gambar: ${error.message}`);
-                setImagePreview(null);
+            if (!response.ok) {
+                const errorData = await response.json();
+                throw new Error(errorData.error?.message || 'Upload failed');
             }
+
+            const data = await response.json();
+            setFormData(prev => ({ ...prev, gambar_url: data.secure_url }));
+        } catch (error) {
+            console.error('Cloudinary upload error:', error);
+            alert(`Gagal mengupload gambar: ${error.message}`);
+            setImagePreview(null);
+        } finally {
+            setUploading(false);
         }
     }
+
 
     function removeImage() {
         setFormData({ ...formData, gambar_url: '' });
@@ -341,26 +354,44 @@ export default function Alat() {
                                                     <img
                                                         src={imagePreview}
                                                         alt="Preview"
-                                                        className="w-full h-full object-cover"
+                                                        className={cn("w-full h-full object-cover", uploading && "opacity-50 blur-sm transition-all")}
                                                     />
-                                                    <button
-                                                        type="button"
-                                                        onClick={removeImage}
-                                                        className="absolute top-2 right-2 bg-red-500 hover:bg-red-600 text-white rounded-full p-1.5 shadow-lg transition-colors"
-                                                    >
-                                                        <X size={16} />
-                                                    </button>
+                                                    {uploading && (
+                                                        <div className="absolute inset-0 flex items-center justify-center">
+                                                            <Loader2 className="w-8 h-8 text-primary-600 animate-spin" />
+                                                        </div>
+                                                    )}
+                                                    {!uploading && (
+                                                        <button
+                                                            type="button"
+                                                            onClick={removeImage}
+                                                            className="absolute top-2 right-2 bg-red-500 hover:bg-red-600 text-white rounded-full p-1.5 shadow-lg transition-colors"
+                                                        >
+                                                            <X size={16} />
+                                                        </button>
+                                                    )}
                                                 </div>
                                             ) : (
-                                                <label className="w-full h-48 flex flex-col items-center justify-center border-2 border-dashed border-slate-300 rounded-lg cursor-pointer hover:border-primary-500 hover:bg-primary-50/50 transition-all bg-slate-50">
-                                                    <div className="flex flex-col items-center gap-2 text-slate-500">
-                                                        <Plus size={32} className="text-slate-400" />
-                                                        <span className="text-sm font-medium">Klik untuk upload gambar</span>
-                                                        <span className="text-xs text-slate-400">PNG, JPG (Max 2MB)</span>
-                                                    </div>
+                                                <label className={cn(
+                                                    "w-full h-48 flex flex-col items-center justify-center border-2 border-dashed border-slate-300 rounded-lg transition-all bg-slate-50 relative",
+                                                    uploading ? "cursor-wait opacity-70" : "cursor-pointer hover:border-primary-500 hover:bg-primary-50/50"
+                                                )}>
+                                                    {uploading ? (
+                                                        <div className="flex flex-col items-center gap-2 text-primary-600">
+                                                            <Loader2 className="w-8 h-8 animate-spin" />
+                                                            <span className="text-sm font-medium">Mengompres & Mengupload...</span>
+                                                        </div>
+                                                    ) : (
+                                                        <div className="flex flex-col items-center gap-2 text-slate-500">
+                                                            <Plus size={32} className="text-slate-400" />
+                                                            <span className="text-sm font-medium">Klik untuk upload gambar</span>
+                                                            <span className="text-xs text-slate-400">PNG, JPG (Max 5MB)</span>
+                                                        </div>
+                                                    )}
                                                     <input
                                                         type="file"
                                                         accept="image/*"
+                                                        disabled={uploading}
                                                         onChange={handleImageChange}
                                                         className="hidden"
                                                     />
