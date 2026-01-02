@@ -11,17 +11,17 @@ export function FloorPlan() {
     // Approximate positions based on the provided image
     const hotspots = [
         // Center Units
-        { id: 'Rak A', label: 'Rak A: Mikrokontroller', x: 54, y: 67 },
-        { id: 'Rak B', label: 'Rak B: Sensor', x: 54, y: 33 },
-        { id: 'Rak C', label: 'Rak C: Aktuator & Output', x: 42, y: 67 },
-        { id: 'Rak D', label: 'Rak D: Modul', x: 42, y: 33 },
-        { id: 'Rak E', label: 'Rak E: Media Koneksi', x: 30, y: 67 },
-        { id: 'Rak F', label: 'Rak F: Power Penyimpanan', x: 30, y: 33 },
+        { id: 'Rak A', label: 'Rak A: Mikrokontroller', x: 56, y: 67 },
+        { id: 'Rak B', label: 'Rak B: Sensor', x: 56, y: 33 },
+        { id: 'Rak C', label: 'Rak C: Aktuator & Output', x: 44, y: 67 },
+        { id: 'Rak D', label: 'Rak D: Modul', x: 44, y: 33 },
+        { id: 'Rak E', label: 'Rak E: Media Koneksi', x: 32, y: 67 },
+        { id: 'Rak F', label: 'Rak F: Power Penyimpanan', x: 32, y: 33 },
 
         // Side Racks
-        { id: 'Rak G', label: 'Rak G: Komponen', x: 84, y: 28 },
-        { id: 'Rak H', label: 'Rak H: Peralatan', x: 84, y: 45 },
-        { id: 'Rak I', label: 'Rak I: Software & Aksesoris', x: 84, y: 62 },
+        { id: 'Rak G', label: 'Rak G: Komponen', x: 81, y: 28 },
+        { id: 'Rak H', label: 'Rak H: Peralatan', x: 81, y: 45 },
+        { id: 'Rak I', label: 'Rak I: Software & Aksesoris', x: 81, y: 62 },
     ];
 
     const handleSpotClick = (spot) => {
