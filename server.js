@@ -78,6 +78,11 @@ app.post('/api/alat', async (req, res) => {
     wrap(handler)(req, res);
 });
 
+// Handle OPTIONS for CORS preflight
+app.options('/api/alat/:id', (req, res) => {
+    res.status(200).end();
+});
+
 app.put('/api/alat/:id', async (req, res) => {
     const handler = await importHandler('./api/alat/[id].js');
     wrap(handler)(req, res);
