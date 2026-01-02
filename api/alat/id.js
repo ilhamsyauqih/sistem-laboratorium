@@ -48,20 +48,28 @@ async function handler(req, res) {
             return res.status(403).json({ message: 'Forbidden' });
         }
 
+        const client = await pool.connect();
         try {
-            const result = await pool.query('DELETE FROM alat_laboratorium WHERE id_alat = $1 RETURNING *', [id]);
+            await client.query('BEGIN');
+
+            // First delete related borrowing history (detail_peminjaman) to avoid Foreign Key violations
+            await client.query('DELETE FROM detail_peminjaman WHERE id_alat = $1', [id]);
+
+            // Then delete the tool itself
+            const result = await client.query('DELETE FROM alat_laboratorium WHERE id_alat = $1 RETURNING *', [id]);
+
+            await client.query('COMMIT');
+
             if (result.rows.length === 0) {
                 return res.status(404).json({ message: 'Alat not found' });
             }
-            return res.status(200).json({ message: 'Alat deleted' });
+            return res.status(200).json({ message: 'Alat successfully deleted' });
         } catch (error) {
+            await client.query('ROLLBACK');
             console.error('Error deleting alat:', error);
-            if (error.code === '23503') {
-                return res.status(409).json({
-                    message: 'Tidak dapat menghapus alat ini karena masih memiliki riwayat peminjaman. Silakan ubah status menjadi Rusak/Tidak Tersedia.'
-                });
-            }
             return res.status(500).json({ message: 'Internal Server Error: ' + error.message });
+        } finally {
+            client.release();
         }
     } else {
         return res.status(405).json({ message: `Method ${req.method} Not Allowed` });
