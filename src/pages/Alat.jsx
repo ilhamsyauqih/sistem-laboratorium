@@ -137,14 +137,15 @@ export default function Alat() {
                 );
 
                 if (!response.ok) {
-                    throw new Error('Upload failed');
+                    const errorData = await response.json();
+                    throw new Error(errorData.error?.message || 'Upload failed');
                 }
 
                 const data = await response.json();
                 setFormData({ ...formData, gambar_url: data.secure_url });
             } catch (error) {
                 console.error('Cloudinary upload error:', error);
-                alert('Gagal mengupload gambar. Silakan coba lagi.');
+                alert(`Gagal mengupload gambar: ${error.message}`);
                 setImagePreview(null);
             }
         }
