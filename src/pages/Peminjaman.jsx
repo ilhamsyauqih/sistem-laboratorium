@@ -9,6 +9,7 @@ import { cn } from '../lib/utils';
 import { format, differenceInDays, isAfter } from 'date-fns';
 import { id as localeId } from 'date-fns/locale';
 import { FluidSearch } from '../components/ui/FluidSearch';
+import FadeIn from '../components/animations/FadeIn';
 
 const formatIDR = (amount) => {
     return new Intl.NumberFormat('id-ID', {
@@ -116,54 +117,58 @@ export default function Peminjaman() {
     return (
         <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
             {/* Header */}
-            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-                <div>
-                    <h1 className="text-3xl font-bold tracking-tight text-slate-900">Riwayat Peminjaman</h1>
-                    <p className="text-slate-500 mt-2">
-                        {user?.role === 'admin'
-                            ? 'Kelola dan pantau semua transaksi peminjaman alat laboratorium.'
-                            : 'Lihat status dan riwayat peminjaman alat Anda.'}
-                    </p>
+            <FadeIn>
+                <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                    <div>
+                        <h1 className="text-3xl font-bold tracking-tight text-slate-900">Riwayat Peminjaman</h1>
+                        <p className="text-slate-500 mt-2">
+                            {user?.role === 'admin'
+                                ? 'Kelola dan pantau semua transaksi peminjaman alat laboratorium.'
+                                : 'Lihat status dan riwayat peminjaman alat Anda.'}
+                        </p>
+                    </div>
+                    {user?.role === 'admin' && (
+                        <Button variant="outline" onClick={printReport} className="print:hidden">
+                            <Printer className="mr-2 h-4 w-4" /> Cetak Laporan
+                        </Button>
+                    )}
                 </div>
-                {user?.role === 'admin' && (
-                    <Button variant="outline" onClick={printReport} className="print:hidden">
-                        <Printer className="mr-2 h-4 w-4" /> Cetak Laporan
-                    </Button>
-                )}
-            </div>
+            </FadeIn>
 
             {/* Filters & Search */}
-            <div className="flex flex-col md:flex-row gap-4 items-start md:items-center justify-between print:hidden">
-                <div className="flex gap-2 overflow-x-auto pb-2">
-                    {[
-                        { key: 'all', label: 'Semua', count: loans.length },
-                        { key: 'pending', label: 'Menunggu', count: loans.filter(l => l.status_pinjam === 'Diajukan').length },
-                        { key: 'approved', label: 'Dipinjam', count: loans.filter(l => l.status_pinjam === 'Dipinjam' || l.status_pinjam === 'Disetujui').length },
-                        { key: 'returned', label: 'Selesai', count: loans.filter(l => l.status_pinjam === 'Selesai').length },
-                    ].map(({ key, label, count }) => (
-                        <button
-                            key={key}
-                            onClick={() => setFilter(key)}
-                            className={cn(
-                                "px-4 py-2 rounded-lg text-sm font-medium transition-all whitespace-nowrap",
-                                filter === key
-                                    ? "bg-primary-600 text-white shadow-sm"
-                                    : "bg-white text-slate-600 hover:bg-slate-50 border border-slate-200"
-                            )}
-                        >
-                            {label} <span className="ml-1.5 opacity-75">({count})</span>
-                        </button>
-                    ))}
-                </div>
+            <FadeIn delay={0.1}>
+                <div className="flex flex-col md:flex-row gap-4 items-start md:items-center justify-between print:hidden">
+                    <div className="flex gap-2 overflow-x-auto pb-2">
+                        {[
+                            { key: 'all', label: 'Semua', count: loans.length },
+                            { key: 'pending', label: 'Menunggu', count: loans.filter(l => l.status_pinjam === 'Diajukan').length },
+                            { key: 'approved', label: 'Dipinjam', count: loans.filter(l => l.status_pinjam === 'Dipinjam' || l.status_pinjam === 'Disetujui').length },
+                            { key: 'returned', label: 'Selesai', count: loans.filter(l => l.status_pinjam === 'Selesai').length },
+                        ].map(({ key, label, count }) => (
+                            <button
+                                key={key}
+                                onClick={() => setFilter(key)}
+                                className={cn(
+                                    "px-4 py-2 rounded-lg text-sm font-medium transition-all whitespace-nowrap",
+                                    filter === key
+                                        ? "bg-primary-600 text-white shadow-sm"
+                                        : "bg-white text-slate-600 hover:bg-slate-50 border border-slate-200"
+                                )}
+                            >
+                                {label} <span className="ml-1.5 opacity-75">({count})</span>
+                            </button>
+                        ))}
+                    </div>
 
-                <div className="w-full md:w-72">
-                    <FluidSearch
-                        placeholder="Cari peminjam..."
-                        value={search}
-                        onChange={(e) => setSearch(e.target.value)}
-                    />
+                    <div className="w-full md:w-72">
+                        <FluidSearch
+                            placeholder="Cari peminjam..."
+                            value={search}
+                            onChange={(e) => setSearch(e.target.value)}
+                        />
+                    </div>
                 </div>
-            </div>
+            </FadeIn>
 
             {/* Loans Grid */}
             {loading ? (
@@ -173,151 +178,155 @@ export default function Peminjaman() {
                     ))}
                 </div>
             ) : filteredLoans.length === 0 ? (
-                <Card className="border-dashed">
-                    <CardContent className="flex flex-col items-center justify-center py-16 text-center">
-                        <Package size={48} className="text-slate-300 mb-4" />
-                        <h3 className="text-lg font-semibold text-slate-900 mb-2">Belum Ada Data</h3>
-                        <p className="text-slate-500">
-                            {filter === 'all'
-                                ? 'Belum ada riwayat peminjaman.'
-                                : `Tidak ada peminjaman dengan status "${filter}".`}
-                        </p>
-                    </CardContent>
-                </Card>
+                <FadeIn delay={0.2}>
+                    <Card className="border-dashed">
+                        <CardContent className="flex flex-col items-center justify-center py-16 text-center">
+                            <Package size={48} className="text-slate-300 mb-4" />
+                            <h3 className="text-lg font-semibold text-slate-900 mb-2">Belum Ada Data</h3>
+                            <p className="text-slate-500">
+                                {filter === 'all'
+                                    ? 'Belum ada riwayat peminjaman.'
+                                    : `Tidak ada peminjaman dengan status "${filter}".`}
+                            </p>
+                        </CardContent>
+                    </Card>
+                </FadeIn>
             ) : (
-                <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3 print:hidden">
-                    {filteredLoans.map((loan) => {
-                        const statusConfig = getStatusConfig(loan.status_pinjam);
-                        return (
-                            <Card key={loan.id_peminjam} className="group hover:shadow-lg transition-all duration-300 border-none shadow-sm bg-white rounded-2xl overflow-hidden">
-                                <CardHeader className="pb-3 bg-gradient-to-br from-slate-50 to-white border-b border-slate-100">
-                                    <div className="flex items-start justify-between">
-                                        <div className="flex-1">
-                                            <div className="text-xs font-semibold text-slate-500 mb-1">ID #{loan.id_peminjam}</div>
-                                            <CardTitle className="text-lg font-bold text-slate-900 line-clamp-1">
-                                                {loan.nama_peminjam}
-                                            </CardTitle>
+                <FadeIn delay={0.2}>
+                    <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3 print:hidden">
+                        {filteredLoans.map((loan) => {
+                            const statusConfig = getStatusConfig(loan.status_pinjam);
+                            return (
+                                <Card key={loan.id_peminjam} className="group hover:shadow-lg transition-all duration-300 border-none shadow-sm bg-white rounded-2xl overflow-hidden">
+                                    <CardHeader className="pb-3 bg-gradient-to-br from-slate-50 to-white border-b border-slate-100">
+                                        <div className="flex items-start justify-between">
+                                            <div className="flex-1">
+                                                <div className="text-xs font-semibold text-slate-500 mb-1">ID #{loan.id_peminjam}</div>
+                                                <CardTitle className="text-lg font-bold text-slate-900 line-clamp-1">
+                                                    {loan.nama_peminjam}
+                                                </CardTitle>
+                                            </div>
+                                            <div className={cn("flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-bold border", statusConfig.color)}>
+                                                {statusConfig.icon}
+                                                <span className="hidden sm:inline">{statusConfig.label}</span>
+                                            </div>
                                         </div>
-                                        <div className={cn("flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-bold border", statusConfig.color)}>
-                                            {statusConfig.icon}
-                                            <span className="hidden sm:inline">{statusConfig.label}</span>
-                                        </div>
-                                    </div>
-                                </CardHeader>
+                                    </CardHeader>
 
-                                <CardContent className="p-5 space-y-4">
-                                    {/* Dates */}
-                                    <div className="space-y-2">
-                                        <div className="flex items-center gap-2 text-sm text-slate-600">
-                                            <Calendar size={16} className="text-slate-400" />
-                                            <span className="font-medium text-slate-500 w-24">Tgl Pinjam:</span>
-                                            <span>{format(new Date(loan.tanggal_pinjam), 'dd MMM yyyy')}</span>
+                                    <CardContent className="p-5 space-y-4">
+                                        {/* Dates */}
+                                        <div className="space-y-2">
+                                            <div className="flex items-center gap-2 text-sm text-slate-600">
+                                                <Calendar size={16} className="text-slate-400" />
+                                                <span className="font-medium text-slate-500 w-24">Tgl Pinjam:</span>
+                                                <span>{format(new Date(loan.tanggal_pinjam), 'dd MMM yyyy')}</span>
+                                            </div>
+                                            {loan.tanggal_kembali_rencana && (
+                                                <div className="flex items-center gap-2 text-sm">
+                                                    <Clock size={16} className="text-slate-400" />
+                                                    <span className="font-medium text-slate-500 w-24">Batas:</span>
+                                                    <span className={cn(
+                                                        "font-semibold",
+                                                        loan.status_pinjam === 'Dipinjam' && isAfter(new Date(), new Date(loan.tanggal_kembali_rencana))
+                                                            ? "text-red-600 animate-pulse"
+                                                            : "text-slate-700"
+                                                    )}>
+                                                        {format(new Date(loan.tanggal_kembali_rencana), 'dd MMM yyyy')}
+                                                    </span>
+                                                    {loan.status_pinjam === 'Dipinjam' && isAfter(new Date(), new Date(loan.tanggal_kembali_rencana)) && (
+                                                        <span className="px-1.5 py-0.5 rounded bg-red-100 text-red-700 text-[10px] font-bold uppercase">Terlambat</span>
+                                                    )}
+                                                </div>
+                                            )}
+                                            {loan.tanggal_kembali && (
+                                                <div className="flex items-center gap-2 text-sm text-slate-600">
+                                                    <CheckCircle2 size={16} className="text-green-500" />
+                                                    <span className="font-medium text-slate-500 w-24">Kembali:</span>
+                                                    <span>{format(new Date(loan.tanggal_kembali), 'dd MMM yyyy')}</span>
+                                                </div>
+                                            )}
                                         </div>
-                                        {loan.tanggal_kembali_rencana && (
-                                            <div className="flex items-center gap-2 text-sm">
-                                                <Clock size={16} className="text-slate-400" />
-                                                <span className="font-medium text-slate-500 w-24">Batas:</span>
-                                                <span className={cn(
-                                                    "font-semibold",
-                                                    loan.status_pinjam === 'Dipinjam' && isAfter(new Date(), new Date(loan.tanggal_kembali_rencana))
-                                                        ? "text-red-600 animate-pulse"
-                                                        : "text-slate-700"
-                                                )}>
-                                                    {format(new Date(loan.tanggal_kembali_rencana), 'dd MMM yyyy')}
-                                                </span>
-                                                {loan.status_pinjam === 'Dipinjam' && isAfter(new Date(), new Date(loan.tanggal_kembali_rencana)) && (
-                                                    <span className="px-1.5 py-0.5 rounded bg-red-100 text-red-700 text-[10px] font-bold uppercase">Terlambat</span>
+
+                                        {/* Fine info if exists */}
+                                        {parseFloat(loan.denda) > 0 && (
+                                            <div className="bg-red-50 border border-red-100 p-2 rounded-lg flex items-center justify-between">
+                                                <div className="flex items-center gap-2 text-xs font-bold text-red-700">
+                                                    <AlertCircle size={14} />
+                                                    Denda Keterlambatan
+                                                </div>
+                                                <div className="text-sm font-black text-red-700">
+                                                    {formatIDR(loan.denda)}
+                                                </div>
+                                            </div>
+                                        )}
+
+                                        {/* Items */}
+                                        <div>
+                                            <div className="flex items-center gap-2 text-xs font-semibold text-slate-500 mb-2">
+                                                <Package size={14} />
+                                                <span>Alat Dipinjam</span>
+                                            </div>
+                                            <ul className="space-y-1.5">
+                                                {loan.details?.map((d) => (
+                                                    <li key={d.id_detail} className="flex items-start gap-2 text-sm">
+                                                        <span className="w-1.5 h-1.5 rounded-full bg-primary-500 mt-1.5 flex-shrink-0"></span>
+                                                        <span className="text-slate-700">{d.nama_alat} <span className="text-slate-400">({d.kode_alat})</span></span>
+                                                    </li>
+                                                ))}
+                                            </ul>
+                                        </div>
+
+                                        {/* Admin Info */}
+                                        {loan.id_petugas && (
+                                            <div className="flex items-center gap-2 text-xs text-slate-500 pt-2 border-t border-slate-100">
+                                                <User size={14} />
+                                                <span>Petugas: {loan.nama_petugas}</span>
+                                            </div>
+                                        )}
+
+                                        {/* Admin Actions */}
+                                        {user?.role === 'admin' && (
+                                            <div className="pt-2 border-t border-slate-100">
+                                                {loan.status_pinjam === 'Diajukan' && (
+                                                    <div className="relative">
+                                                        <select
+                                                            className="w-full h-10 rounded-lg border border-slate-200 bg-white px-4 pr-10 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-all appearance-none cursor-pointer hover:border-primary-400"
+                                                            onChange={(e) => {
+                                                                if (e.target.value) {
+                                                                    handleAction(loan.id_peminjam, e.target.value);
+                                                                    e.target.value = ''; // Reset
+                                                                }
+                                                            }}
+                                                            defaultValue=""
+                                                        >
+                                                            <option value="" disabled>Pilih Aksi...</option>
+                                                            <option value="approve">✓ Setujui Peminjaman</option>
+                                                            <option value="reject">✗ Tolak Peminjaman</option>
+                                                        </select>
+                                                        <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-slate-500">
+                                                            <svg className="h-4 w-4 fill-current" viewBox="0 0 20 20">
+                                                                <path d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clipRule="evenodd" fillRule="evenodd"></path>
+                                                            </svg>
+                                                        </div>
+                                                    </div>
+                                                )}
+                                                {(loan.status_pinjam === 'Dipinjam' || loan.status_pinjam === 'Disetujui') && (
+                                                    <Button
+                                                        size="sm"
+                                                        className="w-full bg-blue-600 hover:bg-blue-700"
+                                                        onClick={() => setReturnModal(loan)}
+                                                    >
+                                                        <CheckCircle2 size={16} className="mr-1.5" /> Proses Pengembalian
+                                                    </Button>
                                                 )}
                                             </div>
                                         )}
-                                        {loan.tanggal_kembali && (
-                                            <div className="flex items-center gap-2 text-sm text-slate-600">
-                                                <CheckCircle2 size={16} className="text-green-500" />
-                                                <span className="font-medium text-slate-500 w-24">Kembali:</span>
-                                                <span>{format(new Date(loan.tanggal_kembali), 'dd MMM yyyy')}</span>
-                                            </div>
-                                        )}
-                                    </div>
-
-                                    {/* Fine info if exists */}
-                                    {parseFloat(loan.denda) > 0 && (
-                                        <div className="bg-red-50 border border-red-100 p-2 rounded-lg flex items-center justify-between">
-                                            <div className="flex items-center gap-2 text-xs font-bold text-red-700">
-                                                <AlertCircle size={14} />
-                                                Denda Keterlambatan
-                                            </div>
-                                            <div className="text-sm font-black text-red-700">
-                                                {formatIDR(loan.denda)}
-                                            </div>
-                                        </div>
-                                    )}
-
-                                    {/* Items */}
-                                    <div>
-                                        <div className="flex items-center gap-2 text-xs font-semibold text-slate-500 mb-2">
-                                            <Package size={14} />
-                                            <span>Alat Dipinjam</span>
-                                        </div>
-                                        <ul className="space-y-1.5">
-                                            {loan.details?.map((d) => (
-                                                <li key={d.id_detail} className="flex items-start gap-2 text-sm">
-                                                    <span className="w-1.5 h-1.5 rounded-full bg-primary-500 mt-1.5 flex-shrink-0"></span>
-                                                    <span className="text-slate-700">{d.nama_alat} <span className="text-slate-400">({d.kode_alat})</span></span>
-                                                </li>
-                                            ))}
-                                        </ul>
-                                    </div>
-
-                                    {/* Admin Info */}
-                                    {loan.id_petugas && (
-                                        <div className="flex items-center gap-2 text-xs text-slate-500 pt-2 border-t border-slate-100">
-                                            <User size={14} />
-                                            <span>Petugas: {loan.nama_petugas}</span>
-                                        </div>
-                                    )}
-
-                                    {/* Admin Actions */}
-                                    {user?.role === 'admin' && (
-                                        <div className="pt-2 border-t border-slate-100">
-                                            {loan.status_pinjam === 'Diajukan' && (
-                                                <div className="relative">
-                                                    <select
-                                                        className="w-full h-10 rounded-lg border border-slate-200 bg-white px-4 pr-10 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-all appearance-none cursor-pointer hover:border-primary-400"
-                                                        onChange={(e) => {
-                                                            if (e.target.value) {
-                                                                handleAction(loan.id_peminjam, e.target.value);
-                                                                e.target.value = ''; // Reset
-                                                            }
-                                                        }}
-                                                        defaultValue=""
-                                                    >
-                                                        <option value="" disabled>Pilih Aksi...</option>
-                                                        <option value="approve">✓ Setujui Peminjaman</option>
-                                                        <option value="reject">✗ Tolak Peminjaman</option>
-                                                    </select>
-                                                    <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-slate-500">
-                                                        <svg className="h-4 w-4 fill-current" viewBox="0 0 20 20">
-                                                            <path d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clipRule="evenodd" fillRule="evenodd"></path>
-                                                        </svg>
-                                                    </div>
-                                                </div>
-                                            )}
-                                            {(loan.status_pinjam === 'Dipinjam' || loan.status_pinjam === 'Disetujui') && (
-                                                <Button
-                                                    size="sm"
-                                                    className="w-full bg-blue-600 hover:bg-blue-700"
-                                                    onClick={() => setReturnModal(loan)}
-                                                >
-                                                    <CheckCircle2 size={16} className="mr-1.5" /> Proses Pengembalian
-                                                </Button>
-                                            )}
-                                        </div>
-                                    )}
-                                </CardContent>
-                            </Card>
-                        );
-                    })}
-                </div>
+                                    </CardContent>
+                                </Card>
+                            );
+                        })}
+                    </div>
+                </FadeIn>
             )}
 
             {/* Return Modal - Using Portal */}
