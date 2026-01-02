@@ -96,7 +96,7 @@ export default async function handler(req, res) {
 
         // 4. Merge back with full tool details
         const enrichedRecommendations = (aiResponse.recommendations || []).map(rec => {
-            const tool = availableTools.find(t => t.id === rec.tool_id);
+            const tool = availableTools.find(t => String(t.id) === String(rec.tool_id));
             if (!tool) return null;
             return {
                 ...tool,

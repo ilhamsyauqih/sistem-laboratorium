@@ -1,6 +1,5 @@
+import 'dotenv/config';
 import pool from './api/db.js';
-import dotenv from 'dotenv';
-dotenv.config();
 
 async function checkDb() {
     try {
