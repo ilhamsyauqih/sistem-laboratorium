@@ -218,11 +218,11 @@ export default function Alat() {
 
             {/* Product Grid */}
             {loading ? (
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 md:gap-6">
                     <LoadingSkeleton count={8} className="h-72" />
                 </div>
             ) : (
-                <AnimatedList className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                <AnimatedList className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 md:gap-6">
                     {filteredAlat.map((item) => (
                         <AnimatedItem key={item.id_alat}>
                             <Card className="group overflow-hidden border-none shadow-sm hover:shadow-xl transition-all duration-300 bg-white rounded-2xl h-full flex flex-col">
@@ -249,9 +249,9 @@ export default function Alat() {
                                     </div>
                                 </div>
 
-                                <CardContent className="p-5 flex-1">
+                                <CardContent className="p-3 md:p-5 flex-1">
                                     <div className="mb-3">
-                                        <h3 className="font-bold text-lg text-slate-900 line-clamp-1 group-hover:text-primary-600 transition-colors">{item.nama_alat}</h3>
+                                        <h3 className="font-bold text-base md:text-lg text-slate-900 line-clamp-1 group-hover:text-primary-600 transition-colors">{item.nama_alat}</h3>
                                         <p className="text-sm text-slate-500 font-medium">{item.kode_alat}</p>
                                     </div>
 
@@ -268,7 +268,7 @@ export default function Alat() {
                                     </div>
                                 </CardContent>
 
-                                <CardFooter className="p-5 pt-0">
+                                <CardFooter className="p-3 pt-0 md:p-5 md:pt-0">
                                     {user?.role === 'admin' ? (
                                         <div className="flex w-full gap-3 opacity-90 group-hover:opacity-100 transition-opacity">
                                             <Button
