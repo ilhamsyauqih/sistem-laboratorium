@@ -1,5 +1,6 @@
 import pool from '../db.js';
 import { allowCors, verifyToken } from '../utils.js';
+import cloudinary from '../lib/cloudinary.js';
 
 async function handler(req, res) {
     const token = req.headers.authorization?.split(' ')[1];
@@ -28,9 +29,24 @@ async function handler(req, res) {
         const { nama_alat, kode_alat, kondisi, status, lokasi, gambar_url } = req.body;
 
         try {
+            let finalImageUrl = gambar_url;
+
+            // If it's a new base64 image, upload to Cloudinary
+            if (gambar_url && gambar_url.startsWith('data:image')) {
+                try {
+                    const uploadResult = await cloudinary.uploader.upload(gambar_url, {
+                        folder: 'sistem-laboratorium/alat',
+                    });
+                    finalImageUrl = uploadResult.secure_url;
+                } catch (uploadError) {
+                    console.error('Cloudinary upload error:', uploadError);
+                    return res.status(500).json({ message: 'Failed to upload image' });
+                }
+            }
+
             const result = await pool.query(
                 'UPDATE alat_laboratorium SET nama_alat = $1, kode_alat = $2, kondisi = $3, status = $4, lokasi = $5, gambar_url = $6 WHERE id_alat = $7 RETURNING *',
-                [nama_alat, kode_alat, kondisi, status, lokasi, gambar_url || null, id]
+                [nama_alat, kode_alat, kondisi, status, lokasi, finalImageUrl || null, id]
             );
 
             if (result.rows.length === 0) {

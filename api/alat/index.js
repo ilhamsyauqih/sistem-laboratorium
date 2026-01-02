@@ -1,5 +1,6 @@
 import pool from '../db.js';
 import { allowCors, verifyToken } from '../utils.js';
+import cloudinary from '../lib/cloudinary.js';
 
 async function handler(req, res) {
     // Check Auth
@@ -58,9 +59,24 @@ async function handler(req, res) {
                 return res.status(409).json({ message: 'Kode alat already exists' });
             }
 
+            let finalImageUrl = null;
+            if (gambar_url && gambar_url.startsWith('data:image')) {
+                try {
+                    const uploadResult = await cloudinary.uploader.upload(gambar_url, {
+                        folder: 'sistem-laboratorium/alat',
+                    });
+                    finalImageUrl = uploadResult.secure_url;
+                } catch (uploadError) {
+                    console.error('Cloudinary upload error:', uploadError);
+                    return res.status(500).json({ message: 'Failed to upload image' });
+                }
+            } else if (gambar_url) {
+                finalImageUrl = gambar_url;
+            }
+
             const result = await pool.query(
                 'INSERT INTO alat_laboratorium (nama_alat, kode_alat, kondisi, status, lokasi, gambar_url) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *',
-                [nama_alat, kode_alat, kondisi, status, lokasi, gambar_url || null]
+                [nama_alat, kode_alat, kondisi, status, lokasi, finalImageUrl]
             );
             return res.status(201).json(result.rows[0]);
         } catch (error) {
