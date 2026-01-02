@@ -97,22 +97,56 @@ export default function Alat() {
         setModalOpen(true);
     }
 
-    function handleImageChange(e) {
+    async function handleImageChange(e) {
         const file = e.target.files[0];
         if (file) {
-            // Check file size (max 2MB)
-            if (file.size > 2 * 1024 * 1024) {
-                alert('Ukuran gambar terlalu besar. Maksimal 2MB');
+            // Check file size (max 5MB for Cloudinary free tier)
+            if (file.size > 5 * 1024 * 1024) {
+                alert('Ukuran gambar terlalu besar. Maksimal 5MB');
                 return;
             }
 
+            // Show preview immediately
             const reader = new FileReader();
             reader.onloadend = () => {
-                const base64String = reader.result;
-                setFormData({ ...formData, gambar_url: base64String });
-                setImagePreview(base64String);
+                setImagePreview(reader.result);
             };
             reader.readAsDataURL(file);
+
+            // Upload to Cloudinary
+            const cloudName = import.meta.env.VITE_CLOUDINARY_CLOUD_NAME;
+            const uploadPreset = import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET;
+
+            if (!cloudName || !uploadPreset) {
+                alert('Cloudinary configuration missing. Please contact administrator.');
+                return;
+            }
+
+            const formDataUpload = new FormData();
+            formDataUpload.append('file', file);
+            formDataUpload.append('upload_preset', uploadPreset);
+            formDataUpload.append('folder', 'sistem-laboratorium/alat');
+
+            try {
+                const response = await fetch(
+                    `https://api.cloudinary.com/v1_1/${cloudName}/image/upload`,
+                    {
+                        method: 'POST',
+                        body: formDataUpload,
+                    }
+                );
+
+                if (!response.ok) {
+                    throw new Error('Upload failed');
+                }
+
+                const data = await response.json();
+                setFormData({ ...formData, gambar_url: data.secure_url });
+            } catch (error) {
+                console.error('Cloudinary upload error:', error);
+                alert('Gagal mengupload gambar. Silakan coba lagi.');
+                setImagePreview(null);
+            }
         }
     }
 

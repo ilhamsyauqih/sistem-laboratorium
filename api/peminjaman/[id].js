@@ -1,11 +1,3 @@
-export const config = {
-    api: {
-        bodyParser: {
-            sizeLimit: '10mb',
-        },
-    },
-};
-
 import pool from '../db.js';
 import { allowCors, verifyToken } from '../utils.js';
 
