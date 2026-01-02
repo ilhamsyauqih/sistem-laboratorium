@@ -34,6 +34,10 @@ async function handler(req, res) {
             query += ' ORDER BY nama_alat ASC';
 
             const result = await pool.query(query, params);
+
+            // Cache for 60 seconds (s-maxage) to reduce DB load
+            res.setHeader('Cache-Control', 's-maxage=60, stale-while-revalidate=30');
+
             return res.status(200).json(result.rows);
         } catch (error) {
             console.error('Error fetching alat:', error);
