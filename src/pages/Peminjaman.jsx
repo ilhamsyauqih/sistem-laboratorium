@@ -322,7 +322,7 @@ export default function Peminjaman() {
                                                         </Button>
 
                                                         {/* WhatsApp Reminder Button */}
-                                                        {shouldShowWhatsAppButton(loan.status_pinjam, loan.tanggal_kembali_rencana) && loan.contact && (
+                                                        {loan.contact && (
                                                             <Button
                                                                 size="sm"
                                                                 className="w-full bg-green-600 hover:bg-green-700 text-white"
