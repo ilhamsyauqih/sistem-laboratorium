@@ -1,6 +1,20 @@
 import React from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
 
 export default function Footer() {
+    const { user } = useAuth();
+    const navigate = useNavigate();
+
+    const handleGuestClick = (e, href) => {
+        if (!user && href !== '/dashboard') {
+            e.preventDefault();
+            navigate('/login', {
+                state: { message: "Masuk untuk meminjam dan mengakses semua fitur!" }
+            });
+        }
+    };
+
     return (
         <footer className="bg-white border-t border-slate-100 py-12 mt-auto">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -15,9 +29,9 @@ export default function Footer() {
                     <div>
                         <h3 className="text-sm font-semibold text-slate-900 tracking-wider uppercase mb-4">Navigasi</h3>
                         <ul className="space-y-3">
-                            <li><a href="/dashboard" className="text-slate-500 hover:text-primary-600 text-sm">Beranda</a></li>
-                            <li><a href="/alat" className="text-slate-500 hover:text-primary-600 text-sm">Katalog Alat</a></li>
-                            <li><a href="/peminjaman" className="text-slate-500 hover:text-primary-600 text-sm">Riwayat Saya</a></li>
+                            <li><Link to="/dashboard" onClick={(e) => handleGuestClick(e, '/dashboard')} className="text-slate-500 hover:text-primary-600 text-sm">Beranda</Link></li>
+                            <li><Link to="/alat" onClick={(e) => handleGuestClick(e, '/alat')} className="text-slate-500 hover:text-primary-600 text-sm">Katalog Alat</Link></li>
+                            <li><Link to="/peminjaman" onClick={(e) => handleGuestClick(e, '/peminjaman')} className="text-slate-500 hover:text-primary-600 text-sm">Riwayat Saya</Link></li>
                         </ul>
                     </div>
                     <div>

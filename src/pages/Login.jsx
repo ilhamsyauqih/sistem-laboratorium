@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { motion } from 'framer-motion';
 import { useAuth } from '../context/AuthContext';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { Button } from '../components/ui/Button';
@@ -119,7 +120,21 @@ export default function Login() {
 
             <div className="flex items-center justify-center p-6 bg-slate-50">
                 <FadeIn delay={0.2}>
-                    <Card className="w-full max-w-md shadow-lg border-none">
+                    <Card className="w-full max-w-md shadow-lg border-none relative overflow-hidden">
+                        {loading && (
+                            <div className="absolute top-0 left-0 w-full h-1 bg-slate-100 z-50">
+                                <motion.div
+                                    className="h-full bg-primary-600"
+                                    initial={{ x: '-100%', width: '50%' }}
+                                    animate={{ x: '200%' }}
+                                    transition={{
+                                        repeat: Infinity,
+                                        duration: 1.5,
+                                        ease: "easeInOut"
+                                    }}
+                                />
+                            </div>
+                        )}
                         <CardHeader className="space-y-1">
                             <CardTitle className="text-2xl font-bold text-center text-primary-900">
                                 {isRegister ? 'Daftar Akun Baru' : (isBorrower ? 'Login Peminjam' : 'Login Petugas')}
@@ -134,12 +149,14 @@ export default function Login() {
                                     <button
                                         className={`flex-1 py-1.5 text-sm font-medium rounded-md transition-all ${isBorrower ? 'bg-white shadow text-primary-700' : 'text-slate-500 hover:text-slate-900'}`}
                                         onClick={() => { setIsBorrower(true); resetForm(); }}
+                                        disabled={loading}
                                     >
                                         Peminjam (Siswa/Guru)
                                     </button>
                                     <button
                                         className={`flex-1 py-1.5 text-sm font-medium rounded-md transition-all ${!isBorrower ? 'bg-white shadow text-primary-700' : 'text-slate-500 hover:text-slate-900'}`}
                                         onClick={() => { setIsBorrower(false); resetForm(); }}
+                                        disabled={loading}
                                     >
                                         Petugas (Admin)
                                     </button>
@@ -175,14 +192,16 @@ export default function Login() {
                                                 value={formData.nama}
                                                 onChange={(e) => setFormData({ ...formData, nama: e.target.value })}
                                                 required
+                                                disabled={loading}
                                             />
                                         </div>
                                         <div className="space-y-2">
                                             <label className="text-sm font-medium">Status</label>
                                             <select
-                                                className="flex h-10 w-full rounded-md border border-slate-200 bg-white px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                                                className="flex h-10 w-full rounded-md border border-slate-200 bg-white px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent disabled:opacity-50"
                                                 value={formData.jenis}
                                                 onChange={(e) => setFormData({ ...formData, jenis: e.target.value })}
+                                                disabled={loading}
                                             >
                                                 <option value="Siswa">Siswa</option>
                                                 <option value="Guru">Guru</option>
@@ -196,6 +215,7 @@ export default function Login() {
                                                     value={formData.kelas}
                                                     onChange={(e) => setFormData({ ...formData, kelas: e.target.value })}
                                                     required
+                                                    disabled={loading}
                                                 />
                                             </div>
                                         )}
@@ -205,6 +225,7 @@ export default function Login() {
                                                 placeholder="08..."
                                                 value={formData.kontak}
                                                 onChange={(e) => setFormData({ ...formData, kontak: e.target.value })}
+                                                disabled={loading}
                                             />
                                         </div>
                                     </>
@@ -217,6 +238,7 @@ export default function Login() {
                                                 value={formData.nama}
                                                 onChange={(e) => setFormData({ ...formData, nama: e.target.value })}
                                                 required
+                                                disabled={loading}
                                             />
                                             <p className="text-xs text-slate-500">Masuk menggunakan nama yang terdaftar.</p>
                                         </div>
@@ -229,6 +251,7 @@ export default function Login() {
                                                     value={formData.username}
                                                     onChange={(e) => setFormData({ ...formData, username: e.target.value })}
                                                     required
+                                                    disabled={loading}
                                                 />
                                             </div>
                                             <div className="space-y-2">
@@ -239,6 +262,7 @@ export default function Login() {
                                                     value={formData.password}
                                                     onChange={(e) => setFormData({ ...formData, password: e.target.value })}
                                                     required
+                                                    disabled={loading}
                                                 />
                                             </div>
                                         </>
@@ -246,7 +270,7 @@ export default function Login() {
                                 )}
 
                                 <Button type="submit" className="w-full" disabled={loading}>
-                                    {loading ? 'Memproses...' : (isRegister ? 'Daftar Sekarang' : 'Masuk')}
+                                    {isRegister ? 'Daftar Sekarang' : 'Masuk'}
                                 </Button>
 
                                 {isBorrower && (
@@ -259,6 +283,7 @@ export default function Login() {
                                             variant="outline"
                                             className="w-full"
                                             onClick={() => { setIsRegister(!isRegister); resetForm(); }}
+                                            disabled={loading}
                                         >
                                             {isRegister ? 'Login Akun' : 'Daftar Akun Baru'}
                                         </Button>

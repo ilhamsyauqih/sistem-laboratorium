@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { useCart } from '../context/CartContext';
 import { Button } from './ui/Button';
@@ -12,6 +12,7 @@ export default function Navbar() {
     const { user, logout } = useAuth();
     const { cart } = useCart();
     const location = useLocation();
+    const navigate = useNavigate();
     const [isOpen, setIsOpen] = useState(false);
 
     const links = [
@@ -19,6 +20,16 @@ export default function Navbar() {
         { name: 'Katalog', href: '/alat' },
         { name: 'Riwayat', href: '/peminjaman' },
     ];
+
+    const handleGuestClick = (e, href) => {
+        if (!user && href !== '/dashboard') {
+            e.preventDefault();
+            setIsOpen(false);
+            navigate('/login', {
+                state: { message: "Masuk untuk meminjam dan mengakses semua fitur!" }
+            });
+        }
+    };
 
     if (user?.role === 'admin') {
         // Admin specific links could be different, but for now shared + dashboard
@@ -39,7 +50,9 @@ export default function Navbar() {
                         </Link>
                     </div>
 
-                    <NavSearch />
+                    <div onClickCapture={(e) => handleGuestClick(e, 'search')}>
+                        <NavSearch />
+                    </div>
 
                     {/* Desktop Menu */}
                     <div className="hidden md:flex items-center space-x-8">
@@ -47,6 +60,7 @@ export default function Navbar() {
                             <Link
                                 key={link.href}
                                 to={link.href}
+                                onClick={(e) => handleGuestClick(e, link.href)}
                                 className={cn(
                                     "text-sm font-medium transition-colors hover:text-primary-600",
                                     isActive(link.href) ? "text-primary-600" : "text-slate-600"
@@ -111,7 +125,10 @@ export default function Navbar() {
                                 <Link
                                     key={link.href}
                                     to={link.href}
-                                    onClick={() => setIsOpen(false)}
+                                    onClick={(e) => {
+                                        setIsOpen(false);
+                                        handleGuestClick(e, link.href);
+                                    }}
                                     className={cn(
                                         "block px-3 py-2 rounded-md text-base font-medium",
                                         isActive(link.href) ? "bg-primary-50 text-primary-600" : "text-slate-600 hover:bg-slate-50"
