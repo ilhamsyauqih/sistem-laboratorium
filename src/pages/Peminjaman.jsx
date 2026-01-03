@@ -4,11 +4,12 @@ import { useAuth } from '../context/AuthContext';
 import { fetchApi } from '../lib/api';
 import { Button } from '../components/ui/Button';
 import { Card, CardContent, CardHeader, CardTitle } from '../components/ui/Card';
-import { Check, X, Printer, Clock, User, Package, Calendar, FileText, CheckCircle2, XCircle, AlertCircle } from 'lucide-react';
+import { Check, X, Printer, Clock, User, Package, Calendar, FileText, CheckCircle2, XCircle, AlertCircle, MessageCircle } from 'lucide-react';
 import { cn } from '../lib/utils';
 import { format, differenceInDays, isAfter } from 'date-fns';
 import { id as localeId } from 'date-fns/locale';
 import { FluidSearch } from '../components/ui/FluidSearch';
+import { shouldShowWhatsAppButton, generateWhatsAppURL, calculateRemainingDays } from '../lib/whatsappUtils';
 import FadeIn from '../components/animations/FadeIn';
 
 const formatIDR = (amount) => {
@@ -311,13 +312,36 @@ export default function Peminjaman() {
                                                     </div>
                                                 )}
                                                 {(loan.status_pinjam === 'Dipinjam' || loan.status_pinjam === 'Disetujui') && (
-                                                    <Button
-                                                        size="sm"
-                                                        className="w-full bg-blue-600 hover:bg-blue-700"
-                                                        onClick={() => setReturnModal(loan)}
-                                                    >
-                                                        <CheckCircle2 size={16} className="mr-1.5" /> Proses Pengembalian
-                                                    </Button>
+                                                    <div className="space-y-2">
+                                                        <Button
+                                                            size="sm"
+                                                            className="w-full bg-blue-600 hover:bg-blue-700"
+                                                            onClick={() => setReturnModal(loan)}
+                                                        >
+                                                            <CheckCircle2 size={16} className="mr-1.5" /> Proses Pengembalian
+                                                        </Button>
+
+                                                        {/* WhatsApp Reminder Button */}
+                                                        {shouldShowWhatsAppButton(loan.status_pinjam, loan.tanggal_kembali_rencana) && loan.contact && (
+                                                            <Button
+                                                                size="sm"
+                                                                className="w-full bg-green-600 hover:bg-green-700 text-white"
+                                                                onClick={() => {
+                                                                    const remainingDays = calculateRemainingDays(loan.tanggal_kembali_rencana);
+                                                                    const whatsappURL = generateWhatsAppURL(
+                                                                        loan.contact,
+                                                                        loan.nama_peminjam,
+                                                                        loan.details,
+                                                                        loan.tanggal_kembali_rencana,
+                                                                        remainingDays
+                                                                    );
+                                                                    window.open(whatsappURL, '_blank');
+                                                                }}
+                                                            >
+                                                                <MessageCircle size={16} className="mr-1.5" /> Kirim Pengingat WhatsApp
+                                                            </Button>
+                                                        )}
+                                                    </div>
                                                 )}
                                             </div>
                                         )}
