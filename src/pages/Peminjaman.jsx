@@ -197,13 +197,6 @@ export default function Peminjaman() {
                     <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3 print:hidden">
                         {filteredLoans.map((loan) => {
                             const statusConfig = getStatusConfig(loan.status_pinjam);
-                            // Debug: Check loan data
-                            console.log('Loan data:', {
-                                id: loan.id_peminjam,
-                                status: loan.status_pinjam,
-                                contact: loan.contact,
-                                hasContact: !!loan.contact
-                            });
                             return (
                                 <Card key={loan.id_peminjam} className="group hover:shadow-lg transition-all duration-300 border-none shadow-sm bg-white rounded-2xl overflow-hidden">
                                     <CardHeader className="pb-3 bg-gradient-to-br from-slate-50 to-white border-b border-slate-100">
