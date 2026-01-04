@@ -54,7 +54,9 @@ export function FluidSearch({
                 <Sparkles
                     className={cn(
                         "transition-all duration-500",
-                        isFocused ? "text-primary-600 rotate-12 scale-110" : "text-slate-400",
+                        isFocused
+                            ? "bg-gradient-to-r from-amber-500 to-orange-600 bg-clip-text text-transparent rotate-12 scale-110"
+                            : "text-slate-400",
                         size === 'large' ? 'w-6 h-6' : 'w-5 h-5'
                     )}
                 />
@@ -83,10 +85,10 @@ export function FluidSearch({
                         type="submit"
                         disabled={loading || !(activeValue)}
                         className={cn(
-                            "px-8 rounded-full font-bold text-white transition-all duration-300 shadow-lg flex items-center justify-center gap-2",
+                            "px-8 rounded-full font-bold text-white transition-all duration-300 flex items-center justify-center gap-2",
                             size === 'large' ? 'h-12 text-base' : 'h-9 text-sm',
                             "bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-400 hover:to-orange-500",
-                            "hover:shadow-amber-500/25 hover:translate-y-[-1px] active:translate-y-[1px]",
+                            "hover:translate-y-[-1px] active:translate-y-[1px]",
                             loading && "opacity-80 cursor-wait"
                         )}
                     >

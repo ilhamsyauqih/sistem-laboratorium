@@ -212,7 +212,13 @@ export default function Dashboard() {
                                     <p className="text-lg text-slate-600">
                                         Pinjam alat praktikum dengan mudah, cek ketersediaan, dan kembalikan tepat waktu.
                                     </p>
-                                    <div className="w-full max-w-md pt-6" onClickCapture={handleGuestAction}>
+                                    <div className="pt-4 flex items-center gap-2">
+                                        <Sparkles className="w-4 h-4 text-amber-500" />
+                                        <p className="text-sm font-bold bg-gradient-to-r from-amber-500 to-orange-600 bg-clip-text text-transparent uppercase tracking-wider">
+                                            Rekomendasi AI, ketik praktikum anda disini
+                                        </p>
+                                    </div>
+                                    <div className="w-full max-w-md" onClickCapture={handleGuestAction}>
                                         <FluidSearch
                                             placeholder="Jelaskan kebutuhan proyekmu..."
                                             size="large"
@@ -228,7 +234,7 @@ export default function Dashboard() {
                                     <div className="flex gap-4 pt-2">
                                         <div onClickCapture={handleGuestAction}>
                                             <Link to="/alat">
-                                                <Button size="lg" className="rounded-full px-8">
+                                                <Button size="lg" className="rounded-full px-8 bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-400 hover:to-orange-500 border-none shadow-none">
                                                     Lihat Katalog <ArrowRight className="ml-2 h-4 w-4" />
                                                 </Button>
                                             </Link>
