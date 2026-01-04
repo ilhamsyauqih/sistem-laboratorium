@@ -44,8 +44,8 @@ export function FluidSearch({
                 className={cn(
                     "absolute inset-0 rounded-full transition-all duration-500 ease-in-out border",
                     isFocused
-                        ? "bg-white border-primary-200 shadow-[0_8px_40px_-12px_rgba(37,99,235,0.2)] scale-[1.02]"
-                        : "bg-white border-slate-100 shadow-[0_8px_30px_rgb(0,0,0,0.04)] hover:border-slate-200 hover:shadow-[0_8px_30px_rgb(0,0,0,0.08)]"
+                        ? "bg-white border-primary-200 scale-[1.02]"
+                        : "bg-white border-slate-100 hover:border-slate-200"
                 )}
             />
 
@@ -85,8 +85,8 @@ export function FluidSearch({
                         className={cn(
                             "px-8 rounded-full font-bold text-white transition-all duration-300 shadow-lg flex items-center justify-center gap-2",
                             size === 'large' ? 'h-12 text-base' : 'h-9 text-sm',
-                            "bg-gradient-to-r from-primary-600 to-blue-600 hover:from-primary-500 hover:to-blue-500",
-                            "hover:shadow-primary-500/25 hover:translate-y-[-1px] active:translate-y-[1px]",
+                            "bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-400 hover:to-orange-500",
+                            "hover:shadow-amber-500/25 hover:translate-y-[-1px] active:translate-y-[1px]",
                             loading && "opacity-80 cursor-wait"
                         )}
                     >
