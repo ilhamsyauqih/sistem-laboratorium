@@ -11,6 +11,8 @@ import { AIRecommendationList } from '../components/AIRecommendationList';
 
 import LoadingSkeleton from '../components/animations/LoadingSkeleton';
 import FadeIn from '../components/animations/FadeIn';
+import { cn } from '../lib/utils';
+import { getComplianceInfo } from '../lib/complianceUtils';
 
 export default function Dashboard() {
     const { user } = useAuth();
@@ -264,15 +266,34 @@ export default function Dashboard() {
                                 <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
                                     <StatCard title="Barang Dipinjam" value={stats?.activeLoans} icon={Clock} color="text-amber-600" bg="bg-amber-50" />
                                     <StatCard title="Total Riwayat" value={stats?.totalHistory} icon={CheckCircle} color="text-blue-600" bg="bg-blue-50" />
-                                    <div className="bg-gradient-to-br from-primary-500 to-primary-600 rounded-2xl p-6 text-white flex flex-col justify-between shadow-lg">
-                                        <div>
-                                            <p className="font-medium opacity-90">Status Akun</p>
-                                            <h3 className="text-2xl font-bold mt-1">Aktif</h3>
-                                        </div>
-                                        <div className="mt-4 text-sm opacity-80">
-                                            Tidak ada denda keterlambatan.
-                                        </div>
-                                    </div>
+
+                                    {/* Compliance Section */}
+                                    {(() => {
+                                        const compliance = getComplianceInfo(stats?.compliance_score ?? 80);
+                                        return (
+                                            <div className={cn(
+                                                "rounded-2xl p-6 text-white flex flex-col justify-between shadow-lg transition-all hover:scale-[1.02]",
+                                                compliance.label === 'Sangat Baik' ? "bg-gradient-to-br from-green-500 to-green-600" :
+                                                    compliance.label === 'Baik' ? "bg-gradient-to-br from-yellow-500 to-yellow-600" :
+                                                        compliance.label === 'Cukup' ? "bg-gradient-to-br from-orange-500 to-orange-600" :
+                                                            "bg-gradient-to-br from-red-500 to-red-600"
+                                            )}>
+                                                <div>
+                                                    <div className="flex items-center justify-between">
+                                                        <p className="font-medium opacity-90">Kepatuhan Anda</p>
+                                                        <AlertCircle size={20} className="opacity-80" />
+                                                    </div>
+                                                    <h3 className="text-2xl font-bold mt-1">{compliance.label}</h3>
+                                                    <p className="text-3xl font-black mt-2">{stats?.compliance_score ?? 80} <span className="text-sm font-normal opacity-80">poin</span></p>
+                                                </div>
+                                                <div className="mt-4 text-xs font-medium bg-white/20 py-2 px-3 rounded-lg backdrop-blur-sm">
+                                                    {stats?.compliance_score >= 85 ? 'Terima kasih telah meminjam dengan sangat tertib!' :
+                                                        stats?.compliance_score >= 70 ? 'Pertahankan kedisiplinan Anda dalam meminjam.' :
+                                                            'Mohon tingkatkan ketertiban pengembalian alat.'}
+                                                </div>
+                                            </div>
+                                        );
+                                    })()}
                                 </div>
                             </div>
                         </FadeIn>

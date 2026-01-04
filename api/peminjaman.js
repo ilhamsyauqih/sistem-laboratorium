@@ -30,7 +30,7 @@ async function handler(req, res) {
             // Fetch details for each loan - this is N+1 but acceptable for small scale or we can use JSON_AGG
             // Using JSON_AGG is better.
             query = `
-        SELECT p.*, u.nama as nama_peminjam, u.kontak as contact, pt.nama_petugas, pg.tanggal_kembali, pg.denda,
+        SELECT p.*, u.nama as nama_peminjam, u.kontak as contact, u.compliance_score, pt.nama_petugas, pg.tanggal_kembali, pg.denda,
                (
                  SELECT json_agg(json_build_object(
                    'id_detail', d.id_detail,

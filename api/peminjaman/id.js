@@ -42,8 +42,50 @@ async function handler(req, res) {
                 );
 
             } else if (action === 'return') {
+                // Get the loan details for late days and user id
+                const loanRes = await client.query('SELECT id_user, tanggal_kembali_rencana FROM peminjaman WHERE id_peminjam = $1', [id]);
+                if (loanRes.rows.length === 0) {
+                    throw new Error('Peminjaman not found');
+                }
+                const loanData = loanRes.rows[0];
+                const id_user = loanData.id_user;
+                const dueDate = new Date(loanData.tanggal_kembali_rencana);
+                const now = new Date();
+
+                // Calculate late days
+                const diffTime = now - dueDate;
+                const lateDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)); // Positive if late, negative or zero if early/on time
+
+                // Determine point change
+                let pointChange = 0;
+                let reason = '';
+                if (lateDays <= 0) {
+                    pointChange = 5;
+                    reason = 'Tepat waktu';
+                } else if (lateDays <= 2) {
+                    pointChange = -5;
+                    reason = `Lambat ${lateDays} hari`;
+                } else if (lateDays <= 5) {
+                    pointChange = -10;
+                    reason = `Lambat ${lateDays} hari`;
+                } else {
+                    pointChange = -20;
+                    reason = `Lambat lebih dari 5 hari (${lateDays} hari)`;
+                }
+
+                // Update compliance score (clamped 0-100)
+                await client.query(
+                    'UPDATE users SET compliance_score = LEAST(100, GREATEST(0, compliance_score + $1)) WHERE id_user = $2',
+                    [pointChange, id_user]
+                );
+
+                // Log compliance change
+                await client.query(
+                    'INSERT INTO compliance_logs (id_user, id_peminjam, point_change, reason) VALUES ($1, $2, $3, $4)',
+                    [id_user, id, pointChange, reason]
+                );
+
                 // Calculate denda based on delay (Rp 5,000 per day)
-                // We'll use a subquery to get tanggal_kembali_rencana and calculate difference
                 await client.query(
                     `INSERT INTO pengembalian (id_peminjam, kondisi_kembali, catatan_pengembalian, denda)
                      SELECT $1, $2, $3, 
@@ -62,8 +104,7 @@ async function handler(req, res) {
                     ['Selesai', id]
                 );
 
-                // Update alat status back to 'Tersedia' (or whatever condition is)
-                // If condition is 'Rusak', set status 'Rusak'
+                // Update alat status back to 'Tersedia'
                 const finalStatus = (kondisi_kembali && kondisi_kembali !== 'Baik') ? 'Rusak' : 'Tersedia';
                 const finalKondisi = kondisi_kembali || 'Baik';
 

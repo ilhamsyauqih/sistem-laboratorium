@@ -17,7 +17,8 @@ CREATE TABLE users (
     nama VARCHAR(255) NOT NULL,
     jenis VARCHAR(50) NOT NULL CHECK (jenis IN ('Siswa', 'Guru')),
     kelas VARCHAR(50), -- Nullable if Teacher
-    kontak VARCHAR(50)
+    kontak VARCHAR(50),
+    compliance_score INTEGER DEFAULT 80
 );
 
 -- Table: petugas (Admins)
@@ -66,4 +67,14 @@ CREATE TABLE pengembalian (
     kondisi_kembali VARCHAR(100),
     catatan_pengembalian TEXT,
     denda DECIMAL(10, 2) DEFAULT 0
+);
+
+-- Table: compliance_logs
+CREATE TABLE compliance_logs (
+    id_log SERIAL PRIMARY KEY,
+    id_user INTEGER REFERENCES users(id_user) ON DELETE CASCADE,
+    id_peminjam INTEGER REFERENCES peminjaman(id_peminjam) ON DELETE SET NULL,
+    point_change INTEGER NOT NULL,
+    reason TEXT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );

@@ -10,6 +10,7 @@ import { format, differenceInDays, isAfter } from 'date-fns';
 import { id as localeId } from 'date-fns/locale';
 import { FluidSearch } from '../components/ui/FluidSearch';
 import { shouldShowWhatsAppButton, generateWhatsAppURL, calculateRemainingDays } from '../lib/whatsappUtils';
+import { getComplianceInfo } from '../lib/complianceUtils';
 import FadeIn from '../components/animations/FadeIn';
 
 const formatIDR = (amount) => {
@@ -209,12 +210,20 @@ export default function Peminjaman() {
                     <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3 print:hidden">
                         {filteredLoans.map((loan) => {
                             const statusConfig = getStatusConfig(loan.status_pinjam);
+                            const compliance = getComplianceInfo(loan.compliance_score || 80);
                             return (
                                 <Card key={loan.id_peminjam} className="group hover:shadow-lg transition-all duration-300 border-none shadow-sm bg-white rounded-2xl overflow-hidden">
                                     <CardHeader className="pb-3 bg-gradient-to-br from-slate-50 to-white border-b border-slate-100">
                                         <div className="flex items-start justify-between">
                                             <div className="flex-1">
-                                                <div className="text-xs font-semibold text-slate-500 mb-1">ID #{loan.id_peminjam}</div>
+                                                <div className="text-xs font-semibold text-slate-500 mb-1 flex items-center gap-2">
+                                                    ID #{loan.id_peminjam}
+                                                    {user?.role === 'admin' && (
+                                                        <span className={cn("px-2 py-0.5 rounded-full text-[10px] font-bold border", compliance.color)}>
+                                                            {compliance.label} ({loan.compliance_score || 80})
+                                                        </span>
+                                                    )}
+                                                </div>
                                                 <CardTitle className="text-lg font-bold text-slate-900 line-clamp-1">
                                                     {loan.nama_peminjam}
                                                 </CardTitle>
