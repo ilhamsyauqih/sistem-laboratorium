@@ -181,6 +181,23 @@ export default function Dashboard() {
                 <>
                     {/* Hero Section */}
                     <FadeIn>
+                        {!user && (
+                            <div className="mb-6 bg-gradient-to-r from-amber-500 to-orange-600 rounded-2xl p-4 shadow-lg flex flex-col sm:flex-row items-center justify-between gap-4 animate-pulse-subtle">
+                                <div className="flex items-center gap-3">
+                                    <div className="p-2 bg-white/20 rounded-lg">
+                                        <AlertCircle className="text-white" size={20} />
+                                    </div>
+                                    <p className="text-white font-bold text-sm sm:text-base tracking-wide uppercase">
+                                        MASUK / DAFTAR UNTUK MEMINJAM DAN MENGGUNAKAN SEMUA FITUR
+                                    </p>
+                                </div>
+                                <Link to="/login">
+                                    <Button className="bg-white text-orange-600 hover:bg-orange-50 border-none font-bold px-8 shadow-sm">
+                                        LOGIN SEKARANG
+                                    </Button>
+                                </Link>
+                            </div>
+                        )}
                         <div className="relative bg-white rounded-3xl overflow-hidden shadow-sm border border-slate-100">
                             <div className="absolute inset-0 bg-gradient-to-r from-primary-600 to-blue-400 opacity-10"></div>
                             <div className="relative px-8 py-12 md:px-12 md:py-16 flex flex-col md:flex-row items-center justify-between gap-8">

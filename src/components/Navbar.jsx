@@ -50,7 +50,7 @@ export default function Navbar() {
                         </Link>
                     </div>
 
-                    <div onClickCapture={(e) => handleGuestClick(e, 'search')}>
+                    <div className="flex-1 md:flex-initial" onClickCapture={(e) => handleGuestClick(e, 'search')}>
                         <NavSearch />
                     </div>
 
@@ -105,7 +105,19 @@ export default function Navbar() {
                     </div>
 
                     {/* Mobile menu button */}
-                    <div className="flex items-center md:hidden">
+                    <div className="flex items-center gap-2 md:hidden">
+                        {user && user.role !== 'admin' && (
+                            <Link to="/cart">
+                                <Button variant="ghost" size="icon" className="relative text-slate-600">
+                                    <ShoppingCart size={20} />
+                                    {cart.length > 0 && (
+                                        <span className="absolute top-1 right-1 bg-red-600 text-white text-[10px] w-4 h-4 flex items-center justify-center rounded-full border border-white">
+                                            {cart.length}
+                                        </span>
+                                    )}
+                                </Button>
+                            </Link>
+                        )}
                         <button
                             onClick={() => setIsOpen(!isOpen)}
                             className="inline-flex items-center justify-center p-2 rounded-md text-slate-400 hover:text-slate-500 hover:bg-slate-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-primary-500"
