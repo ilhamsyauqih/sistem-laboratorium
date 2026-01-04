@@ -37,11 +37,9 @@ async function handler(req, res) {
 
             } else {
                 // Borrower Stats
-                const userRes = await pool.query('SELECT compliance_score FROM users WHERE id_user = $1', [user.id]);
                 const myActive = await pool.query("SELECT COUNT(*) FROM peminjaman WHERE id_user = $1 AND status_pinjam = 'Dipinjam'", [user.id]);
                 const myHistory = await pool.query("SELECT COUNT(*) FROM peminjaman WHERE id_user = $1", [user.id]);
 
-                stats.compliance_score = userRes.rows[0].compliance_score;
                 stats.activeLoans = parseInt(myActive.rows[0].count);
                 stats.totalHistory = parseInt(myHistory.rows[0].count);
             }
