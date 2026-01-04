@@ -74,7 +74,12 @@ Terima kasih.
     const encodedMessage = encodeURIComponent(message);
 
     // Clean phone number (remove any spaces, dashes, or plus signs)
-    const cleanPhone = phoneNumber.replace(/[\s\-+]/g, '');
+    let cleanPhone = phoneNumber.replace(/[\s\-+]/g, '');
+
+    // Convert leading '0' to '62' (Indonesia country code)
+    if (cleanPhone.startsWith('0')) {
+        cleanPhone = '62' + cleanPhone.slice(1);
+    }
 
     // Return WhatsApp Click-to-Chat URL
     return `https://wa.me/${cleanPhone}?text=${encodedMessage}`;
