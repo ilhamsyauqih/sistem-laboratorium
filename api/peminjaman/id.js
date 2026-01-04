@@ -4,13 +4,16 @@ import { allowCors, verifyToken } from '../utils.js';
 async function handler(req, res) {
     const token = req.headers.authorization?.split(' ')[1];
     const user = verifyToken(token);
-    if (!user || user.role !== 'admin') {
-        return res.status(403).json({ message: 'Forbidden' });
+    if (!user) {
+        return res.status(401).json({ message: 'Unauthorized' });
     }
 
     const { id } = req.query;
 
     if (req.method === 'PUT') {
+        if (user.role !== 'admin') {
+            return res.status(403).json({ message: 'Forbidden' });
+        }
         const { action, kondisi_kembali, catatan_pengembalian } = req.body;
         // action: 'approve', 'reject', 'return'
 
@@ -79,6 +82,39 @@ async function handler(req, res) {
         } catch (error) {
             await client.query('ROLLBACK');
             console.error('Error updating peminjaman:', error);
+            return res.status(500).json({ message: 'Internal Server Error' });
+        } finally {
+            client.release();
+        }
+    } else if (req.method === 'DELETE') {
+        const client = await pool.connect();
+        try {
+            // Check if user is admin or the owner
+            const checkRes = await client.query('SELECT id_user, status_pinjam FROM peminjaman WHERE id_peminjam = $1', [id]);
+            if (checkRes.rows.length === 0) {
+                return res.status(404).json({ message: 'Peminjaman not found' });
+            }
+
+            const loan = checkRes.rows[0];
+
+            // Authorization: Admin can delete anything. Borrower can only delete their own.
+            if (user.role !== 'admin' && loan.id_user !== user.id) {
+                return res.status(403).json({ message: 'Forbidden' });
+            }
+
+            // Status check: Only allow deleting Selesai or Ditolak for everyone
+            // Note: If you want to allow admin to delete anything, remove the status check for admins.
+            // But usually history deletion is for finished ones.
+            if (loan.status_pinjam !== 'Selesai' && loan.status_pinjam !== 'Ditolak') {
+                return res.status(400).json({ message: 'Hanya riwayat yang sudah selesai atau ditolak yang bisa dihapus' });
+            }
+
+            // Delete (Cascades will handle detail_peminjaman and pengembalian if configured in schema)
+            await client.query('DELETE FROM peminjaman WHERE id_peminjam = $1', [id]);
+
+            return res.status(200).json({ message: 'History deleted successfully' });
+        } catch (error) {
+            console.error('Error deleting peminjaman:', error);
             return res.status(500).json({ message: 'Internal Server Error' });
         } finally {
             client.release();

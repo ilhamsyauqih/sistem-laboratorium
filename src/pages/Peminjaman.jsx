@@ -4,7 +4,7 @@ import { useAuth } from '../context/AuthContext';
 import { fetchApi } from '../lib/api';
 import { Button } from '../components/ui/Button';
 import { Card, CardContent, CardHeader, CardTitle } from '../components/ui/Card';
-import { Check, X, Printer, Clock, User, Package, Calendar, FileText, CheckCircle2, XCircle, AlertCircle, MessageCircle } from 'lucide-react';
+import { Check, X, Printer, Clock, User, Package, Calendar, FileText, CheckCircle2, XCircle, AlertCircle, MessageCircle, Trash2 } from 'lucide-react';
 import { cn } from '../lib/utils';
 import { format, differenceInDays, isAfter } from 'date-fns';
 import { id as localeId } from 'date-fns/locale';
@@ -49,6 +49,18 @@ export default function Peminjaman() {
             await fetchApi(`/peminjaman/${id}`, {
                 method: 'PUT',
                 body: JSON.stringify({ action, ...body })
+            });
+            loadLoans();
+        } catch (error) {
+            alert(error.message);
+        }
+    };
+
+    const handleDelete = async (id) => {
+        if (!confirm('Yakin ingin menghapus riwayat peminjaman ini secara permanen?')) return;
+        try {
+            await fetchApi(`/peminjaman/${id}`, {
+                method: 'DELETE'
             });
             loadLoans();
         } catch (error) {
@@ -285,63 +297,80 @@ export default function Peminjaman() {
                                             </div>
                                         )}
 
-                                        {/* Admin Actions */}
-                                        {user?.role === 'admin' && (
-                                            <div className="pt-2 border-t border-slate-100">
-                                                {loan.status_pinjam === 'Diajukan' && (
-                                                    <div className="relative">
-                                                        <select
-                                                            className="w-full h-10 rounded-lg border border-slate-200 bg-white px-4 pr-10 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-all appearance-none cursor-pointer hover:border-primary-400"
-                                                            onChange={(e) => {
-                                                                if (e.target.value) {
-                                                                    handleAction(loan.id_peminjam, e.target.value);
-                                                                    e.target.value = ''; // Reset
-                                                                }
-                                                            }}
-                                                            defaultValue=""
-                                                        >
-                                                            <option value="" disabled>Pilih Aksi...</option>
-                                                            <option value="approve">✓ Setujui Peminjaman</option>
-                                                            <option value="reject">✗ Tolak Peminjaman</option>
-                                                        </select>
-                                                        <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-slate-500">
-                                                            <svg className="h-4 w-4 fill-current" viewBox="0 0 20 20">
-                                                                <path d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clipRule="evenodd" fillRule="evenodd"></path>
-                                                            </svg>
-                                                        </div>
-                                                    </div>
-                                                )}
-                                                {(loan.status_pinjam === 'Dipinjam' || loan.status_pinjam === 'Disetujui') && (
-                                                    <div className="space-y-2">
-                                                        <Button
-                                                            size="sm"
-                                                            className="w-full bg-blue-600 hover:bg-blue-700"
-                                                            onClick={() => setReturnModal(loan)}
-                                                        >
-                                                            <CheckCircle2 size={16} className="mr-1.5" /> Proses Pengembalian
-                                                        </Button>
-
-                                                        {/* WhatsApp Reminder Button */}
-                                                        {loan.contact && (
-                                                            <Button
-                                                                size="sm"
-                                                                className="w-full bg-green-600 hover:bg-green-700 text-white"
-                                                                onClick={() => {
-                                                                    const remainingDays = calculateRemainingDays(loan.tanggal_kembali_rencana);
-                                                                    const whatsappURL = generateWhatsAppURL(
-                                                                        loan.contact,
-                                                                        loan.nama_peminjam,
-                                                                        loan.details,
-                                                                        loan.tanggal_kembali_rencana,
-                                                                        remainingDays
-                                                                    );
-                                                                    window.open(whatsappURL, '_blank');
-                                                                }}
-                                                            >
-                                                                <MessageCircle size={16} className="mr-1.5" /> Kirim Pengingat WhatsApp
-                                                            </Button>
+                                        {/* Actions Area */}
+                                        {(user?.role === 'admin' || (loan.status_pinjam === 'Selesai' || loan.status_pinjam === 'Ditolak')) && (
+                                            <div className="pt-2 border-t border-slate-100 space-y-2">
+                                                {/* Admin Only: Approve/Reject/Return */}
+                                                {user?.role === 'admin' && (
+                                                    <>
+                                                        {loan.status_pinjam === 'Diajukan' && (
+                                                            <div className="relative">
+                                                                <select
+                                                                    className="w-full h-10 rounded-lg border border-slate-200 bg-white px-4 pr-10 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-all appearance-none cursor-pointer hover:border-primary-400"
+                                                                    onChange={(e) => {
+                                                                        if (e.target.value) {
+                                                                            handleAction(loan.id_peminjam, e.target.value);
+                                                                            e.target.value = ''; // Reset
+                                                                        }
+                                                                    }}
+                                                                    defaultValue=""
+                                                                >
+                                                                    <option value="" disabled>Pilih Aksi...</option>
+                                                                    <option value="approve">✓ Setujui Peminjaman</option>
+                                                                    <option value="reject">✗ Tolak Peminjaman</option>
+                                                                </select>
+                                                                <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-slate-500">
+                                                                    <svg className="h-4 w-4 fill-current" viewBox="0 0 20 20">
+                                                                        <path d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clipRule="evenodd" fillRule="evenodd"></path>
+                                                                    </svg>
+                                                                </div>
+                                                            </div>
                                                         )}
-                                                    </div>
+                                                        {(loan.status_pinjam === 'Dipinjam' || loan.status_pinjam === 'Disetujui') && (
+                                                            <div className="space-y-2">
+                                                                <Button
+                                                                    size="sm"
+                                                                    className="w-full bg-blue-600 hover:bg-blue-700"
+                                                                    onClick={() => setReturnModal(loan)}
+                                                                >
+                                                                    <CheckCircle2 size={16} className="mr-1.5" /> Proses Pengembalian
+                                                                </Button>
+
+                                                                {/* WhatsApp Reminder Button */}
+                                                                {loan.contact && (
+                                                                    <Button
+                                                                        size="sm"
+                                                                        className="w-full bg-green-600 hover:bg-green-700 text-white"
+                                                                        onClick={() => {
+                                                                            const remainingDays = calculateRemainingDays(loan.tanggal_kembali_rencana);
+                                                                            const whatsappURL = generateWhatsAppURL(
+                                                                                loan.contact,
+                                                                                loan.nama_peminjam,
+                                                                                loan.details,
+                                                                                loan.tanggal_kembali_rencana,
+                                                                                remainingDays
+                                                                            );
+                                                                            window.open(whatsappURL, '_blank');
+                                                                        }}
+                                                                    >
+                                                                        <MessageCircle size={16} className="mr-1.5" /> Kirim Pengingat WhatsApp
+                                                                    </Button>
+                                                                )}
+                                                            </div>
+                                                        )}
+                                                    </>
+                                                )}
+
+                                                {/* Delete Button (Available for Admin or Owner if status is Selesai/Ditolak) */}
+                                                {(loan.status_pinjam === 'Selesai' || loan.status_pinjam === 'Ditolak') && (
+                                                    <Button
+                                                        variant="ghost"
+                                                        size="sm"
+                                                        className="w-full text-red-600 hover:text-red-700 hover:bg-red-50"
+                                                        onClick={() => handleDelete(loan.id_peminjam)}
+                                                    >
+                                                        <Trash2 size={16} className="mr-1.5" /> Hapus Riwayat
+                                                    </Button>
                                                 )}
                                             </div>
                                         )}
