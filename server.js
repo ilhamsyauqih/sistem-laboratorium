@@ -84,11 +84,11 @@ app.options('/api/alat/:id', (req, res) => {
 });
 
 app.put('/api/alat/:id', async (req, res) => {
-    const handler = await importHandler('./api/alat/[id].js');
+    const handler = await importHandler('./api/alat/id.js');
     wrap(handler)(req, res);
 });
 app.delete('/api/alat/:id', async (req, res) => {
-    const handler = await importHandler('./api/alat/[id].js');
+    const handler = await importHandler('./api/alat/id.js');
     wrap(handler)(req, res);
 });
 
@@ -102,7 +102,7 @@ app.post('/api/peminjaman', async (req, res) => {
     wrap(handler)(req, res);
 });
 app.put('/api/peminjaman/:id', async (req, res) => {
-    const handler = await importHandler('./api/peminjaman/[id].js');
+    const handler = await importHandler('./api/peminjaman/id.js');
     wrap(handler)(req, res);
 });
 
