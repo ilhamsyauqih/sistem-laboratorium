@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { fetchApi } from '../lib/api';
 import { Card, CardContent } from '../components/ui/Card';
-import { Package, Clock, CheckCircle, AlertCircle, ArrowRight } from 'lucide-react';
+import { Package, Clock, CheckCircle, AlertCircle, ArrowRight, Sparkles } from 'lucide-react';
 import { Button } from '../components/ui/Button';
 import { useNavigate, Link } from 'react-router-dom';
 import { FloorPlan } from '../components/FloorPlan';
