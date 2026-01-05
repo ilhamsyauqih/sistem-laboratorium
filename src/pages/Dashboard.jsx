@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { fetchApi } from '../lib/api';
 import { Card, CardContent } from '../components/ui/Card';
@@ -23,6 +23,14 @@ export default function Dashboard() {
     // AI State
     const [aiLoading, setAiLoading] = useState(false);
     const [aiResult, setAiResult] = useState(null); // { analysis: "", recommendations: [] }
+    const resultsRef = useRef(null);
+
+    // Scroll to AI results when they arrive
+    useEffect(() => {
+        if (aiResult) {
+            resultsRef.current?.scrollIntoView({ behavior: 'smooth' });
+        }
+    }, [aiResult]);
 
     useEffect(() => {
         async function loadStats() {
@@ -268,12 +276,14 @@ export default function Dashboard() {
 
                     {/* AI Recommendations Section */}
                     {aiResult && (
-                        <FadeIn delay={0.1}>
-                            <AIRecommendationList
-                                analysis={aiResult.analysis}
-                                recommendations={aiResult.recommendations}
-                            />
-                        </FadeIn>
+                        <div ref={resultsRef} className="scroll-mt-20">
+                            <FadeIn delay={0.1}>
+                                <AIRecommendationList
+                                    analysis={aiResult.analysis}
+                                    recommendations={aiResult.recommendations}
+                                />
+                            </FadeIn>
+                        </div>
                     )}
 
                     {/* Floor Plan Section */}
