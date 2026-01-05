@@ -47,7 +47,7 @@ export default function Navbar() {
                         </Link>
                     </div>
 
-                    <div className="flex-1 md:flex-initial" onClickCapture={(e) => handleGuestClick(e, 'search')}>
+                    <div className="hidden md:flex flex-1 justify-center max-w-lg mx-auto px-4" onClickCapture={(e) => handleGuestClick(e, 'search')}>
                         <NavSearch />
                     </div>
 

@@ -49,7 +49,7 @@ export function NavSearch() {
     };
 
     return (
-        <div ref={wrapperRef} className="relative flex-1 mx-2 md:mx-6">
+        <div ref={wrapperRef} className="relative w-full">
             <form onSubmit={handleSearch} className="relative z-50">
                 <div className="relative group">
                     <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-primary-500 transition-colors" size={20} />
