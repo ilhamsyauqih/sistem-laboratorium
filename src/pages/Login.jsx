@@ -105,21 +105,21 @@ export default function Login() {
     return (
         <div className="min-h-screen grid lg:grid-cols-2 relative">
             <div className="absolute top-4 left-4 z-10">
-                <Button variant="ghost" onClick={() => navigate('/')} className="text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm">
+                <Button variant="ghost" onClick={() => navigate('/')} className="text-slate-600 hover:text-slate-900 bg-white/80 backdrop-blur-sm">
                     &larr; Kembali ke Beranda
                 </Button>
             </div>
 
-            <div className="hidden lg:flex flex-col justify-center items-center bg-white dark:bg-slate-900 p-12 border-r border-slate-100 dark:border-slate-800">
-                <img src="/images/logo.png" alt="LabSystem Logo" className="w-full max-w-sm mb-8 dark:brightness-110" />
-                <p className="text-xl text-slate-500 dark:text-slate-400 text-center max-w-sm">
+            <div className="hidden lg:flex flex-col justify-center items-center bg-white p-12 border-r border-slate-100">
+                <img src="/images/logo.png" alt="LabSystem Logo" className="w-full max-w-sm mb-8" />
+                <p className="text-xl text-slate-500 text-center max-w-sm">
                     Kelola peminjaman dan pengembalian alat laboratorium sekolah dengan mudah dan efisien.
                 </p>
             </div>
 
-            <div className="flex items-center justify-center p-6 bg-slate-50 dark:bg-slate-900/50">
+            <div className="flex items-center justify-center p-6 bg-slate-50">
                 <FadeIn delay={0.2}>
-                    <Card className="w-full max-w-md shadow-lg border-none relative overflow-hidden bg-white dark:bg-slate-800">
+                    <Card className="w-full max-w-md shadow-lg border-none relative overflow-hidden">
                         {loading && (
                             <div className="absolute top-0 left-0 w-full h-1 bg-slate-100 z-50">
                                 <motion.div
@@ -135,25 +135,25 @@ export default function Login() {
                             </div>
                         )}
                         <CardHeader className="space-y-1">
-                            <CardTitle className="text-2xl font-bold text-center text-primary-900 dark:text-primary-100">
+                            <CardTitle className="text-2xl font-bold text-center text-primary-900">
                                 {isRegister ? 'Daftar Akun Baru' : (isBorrower ? 'Login Peminjam' : 'Login Petugas')}
                             </CardTitle>
-                            <p className="text-center text-slate-500 dark:text-slate-400">
+                            <p className="text-center text-slate-500">
                                 {isRegister ? 'Lengkapi data diri untuk mulai meminjam' : 'Masuk untuk melanjutkan'}
                             </p>
                         </CardHeader>
                         <CardContent>
                             {!isRegister && (
-                                <div className="flex bg-slate-100 dark:bg-slate-900/50 p-1 rounded-lg mb-6">
+                                <div className="flex bg-slate-100 p-1 rounded-lg mb-6">
                                     <button
-                                        className={`flex-1 py-1.5 text-sm font-medium rounded-md transition-all ${isBorrower ? 'bg-white dark:bg-slate-700 shadow text-primary-700 dark:text-primary-300' : 'text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'}`}
+                                        className={`flex-1 py-1.5 text-sm font-medium rounded-md transition-all ${isBorrower ? 'bg-white shadow text-primary-700' : 'text-slate-500 hover:text-slate-900'}`}
                                         onClick={() => { setIsBorrower(true); resetForm(); }}
                                         disabled={loading}
                                     >
                                         Peminjam (Siswa/Guru)
                                     </button>
                                     <button
-                                        className={`flex-1 py-1.5 text-sm font-medium rounded-md transition-all ${!isBorrower ? 'bg-white dark:bg-slate-700 shadow text-primary-700 dark:text-primary-300' : 'text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'}`}
+                                        className={`flex-1 py-1.5 text-sm font-medium rounded-md transition-all ${!isBorrower ? 'bg-white shadow text-primary-700' : 'text-slate-500 hover:text-slate-900'}`}
                                         onClick={() => { setIsBorrower(false); resetForm(); }}
                                         disabled={loading}
                                     >
@@ -197,7 +197,7 @@ export default function Login() {
                                         <div className="space-y-2">
                                             <label className="text-sm font-medium">Status</label>
                                             <select
-                                                className="flex h-10 w-full rounded-md border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 px-3 py-2 text-sm text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent disabled:opacity-50"
+                                                className="flex h-10 w-full rounded-md border border-slate-200 bg-white px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent disabled:opacity-50"
                                                 value={formData.jenis}
                                                 onChange={(e) => setFormData({ ...formData, jenis: e.target.value })}
                                                 disabled={loading}
@@ -239,7 +239,7 @@ export default function Login() {
                                                 required
                                                 disabled={loading}
                                             />
-                                            <p className="text-xs text-slate-500 dark:text-slate-400">Masuk menggunakan nama yang terdaftar.</p>
+                                            <p className="text-xs text-slate-500">Masuk menggunakan nama yang terdaftar.</p>
                                         </div>
                                     ) : (
                                         <>
@@ -273,8 +273,8 @@ export default function Login() {
                                 </Button>
 
                                 {isBorrower && (
-                                    <div className="text-center mt-4 border-t border-slate-100 dark:border-slate-700 pt-4">
-                                        <p className="text-sm text-slate-500 dark:text-slate-400 mb-2">
+                                    <div className="text-center mt-4 border-t border-slate-100 pt-4">
+                                        <p className="text-sm text-slate-500 mb-2">
                                             {isRegister ? 'Sudah punya akun?' : 'Belum terdaftar?'}
                                         </p>
                                         <Button

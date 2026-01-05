@@ -14,7 +14,7 @@ export default function Layout() {
     // Public layout - auth check moved to specific protected actions or components
 
     return (
-        <div className="min-h-screen bg-slate-50 dark:bg-slate-900 text-slate-900 dark:text-slate-100 flex flex-col font-sans transition-colors duration-300">
+        <div className="min-h-screen bg-slate-50 flex flex-col font-sans">
             <Navbar />
 
             <main className="flex-1 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">

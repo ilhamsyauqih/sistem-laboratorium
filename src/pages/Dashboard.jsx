@@ -96,10 +96,10 @@ export default function Dashboard() {
                 <div className="space-y-8">
                     {/* Compact Header */}
                     <FadeIn>
-                        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-6 border-b border-slate-100 dark:border-slate-800">
+                        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-6 border-b border-slate-100">
                             <div>
-                                <h1 className="text-3xl font-bold tracking-tight text-slate-900 dark:text-white">Dashboard Overview</h1>
-                                <p className="text-slate-500 dark:text-slate-400 mt-1">Selamat datang kembali, {user.name}. Berikut adalah ringkasan aktivitas lab hari ini.</p>
+                                <h1 className="text-3xl font-bold tracking-tight text-slate-900">Dashboard Overview</h1>
+                                <p className="text-slate-500 mt-1">Selamat datang kembali, {user.name}. Berikut adalah ringkasan aktivitas lab hari ini.</p>
                             </div>
                             <div className="flex gap-2">
                                 <Link to="/peminjaman">
@@ -115,10 +115,10 @@ export default function Dashboard() {
                     {/* Stats Grid - Prominent for Admin */}
                     <FadeIn delay={0.1}>
                         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
-                            <StatCard title="Total Alat" value={stats?.totalAlat} icon={Package} color="text-blue-600 dark:text-blue-400" bg="bg-blue-50 dark:bg-blue-900/20" />
-                            <StatCard title="Sedang Dipinjam" value={stats?.activeLoans} icon={Clock} color="text-amber-600 dark:text-amber-400" bg="bg-amber-50 dark:bg-amber-900/20" />
-                            <StatCard title="Permintaan Baru" value={stats?.pendingRequests} icon={AlertCircle} color="text-red-600 dark:text-red-400" bg="bg-red-50 dark:bg-red-900/20" />
-                            <StatCard title="Kondisi Rusak" value={stats?.totalRusak} icon={AlertCircle} color="text-slate-600 dark:text-slate-400" bg="bg-slate-50 dark:bg-slate-800" />
+                            <StatCard title="Total Alat" value={stats?.totalAlat} icon={Package} color="text-blue-600" bg="bg-blue-50" />
+                            <StatCard title="Sedang Dipinjam" value={stats?.activeLoans} icon={Clock} color="text-amber-600" bg="bg-amber-50" />
+                            <StatCard title="Permintaan Baru" value={stats?.pendingRequests} icon={AlertCircle} color="text-red-600" bg="bg-red-50" />
+                            <StatCard title="Kondisi Rusak" value={stats?.totalRusak} icon={AlertCircle} color="text-slate-600" bg="bg-slate-50" />
                         </div>
                     </FadeIn>
 
@@ -128,19 +128,19 @@ export default function Dashboard() {
                             <div className="lg:col-span-2 space-y-6">
                                 <FadeIn delay={0.2}>
                                     <div className="flex items-center justify-between">
-                                        <h2 className="text-xl font-bold text-slate-900 dark:text-white">Aktivitas Peminjaman Terkini</h2>
-                                        <Link to="/peminjaman" className="text-sm font-medium text-primary-600 dark:text-primary-400 hover:text-primary-700 dark:hover:text-primary-300">Lihat Semua &rarr;</Link>
+                                        <h2 className="text-xl font-bold text-slate-900">Aktivitas Peminjaman Terkini</h2>
+                                        <Link to="/peminjaman" className="text-sm font-medium text-primary-600 hover:text-primary-700">Lihat Semua &rarr;</Link>
                                     </div>
-                                    <div className="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-slate-100 dark:border-slate-700 divide-y divide-slate-100 dark:divide-slate-700">
+                                    <div className="bg-white rounded-xl shadow-sm border border-slate-100 divide-y divide-slate-100">
                                         {stats.recentActivity.length > 0 ? stats.recentActivity.map((act) => (
-                                            <Link key={act.id_peminjam} to="/peminjaman" className="p-4 flex flex-col sm:flex-row sm:items-center justify-between hover:bg-slate-50 dark:hover:bg-slate-700/50 transition-colors gap-4">
+                                            <Link key={act.id_peminjam} to="/peminjaman" className="p-4 flex flex-col sm:flex-row sm:items-center justify-between hover:bg-slate-50 transition-colors gap-4">
                                                 <div className="flex items-center gap-4">
-                                                    <div className="h-10 w-10 rounded-full bg-slate-100 dark:bg-slate-700 flex items-center justify-center text-slate-500 dark:text-slate-400 flex-shrink-0">
+                                                    <div className="h-10 w-10 rounded-full bg-slate-100 flex items-center justify-center text-slate-500 flex-shrink-0">
                                                         <Clock size={20} />
                                                     </div>
                                                     <div>
-                                                        <p className="font-medium text-slate-900 dark:text-white">{act.nama}</p>
-                                                        <p className="text-sm text-slate-500 dark:text-slate-400">{act.nama_alat} • {new Date(act.tanggal_pinjam).toLocaleDateString('id-ID', { dateStyle: 'medium' })}</p>
+                                                        <p className="font-medium text-slate-900">{act.nama}</p>
+                                                        <p className="text-sm text-slate-500">{act.nama_alat} • {new Date(act.tanggal_pinjam).toLocaleDateString('id-ID', { dateStyle: 'medium' })}</p>
                                                     </div>
                                                 </div>
                                                 <Badge status={act.status_pinjam} />
@@ -198,18 +198,18 @@ export default function Dashboard() {
                                 </Link>
                             </div>
                         )}
-                        <div className="relative bg-white dark:bg-slate-800 rounded-3xl overflow-hidden shadow-sm border border-slate-100 dark:border-slate-700">
-                            <div className="absolute inset-0 bg-gradient-to-r from-primary-600 to-blue-400 opacity-10 dark:opacity-20"></div>
+                        <div className="relative bg-white rounded-3xl overflow-hidden shadow-sm border border-slate-100">
+                            <div className="absolute inset-0 bg-gradient-to-r from-primary-600 to-blue-400 opacity-10"></div>
                             <div className="relative px-8 py-12 md:px-12 md:py-16 flex flex-col md:flex-row items-center justify-between gap-8">
                                 <div className="space-y-4 max-w-lg">
-                                    <div className="inline-flex items-center rounded-full border border-primary-200 dark:border-primary-800 bg-primary-50 dark:bg-primary-900/30 px-3 py-1 text-sm font-medium text-primary-800 dark:text-primary-200">
+                                    <div className="inline-flex items-center rounded-full border border-primary-200 bg-primary-50 px-3 py-1 text-sm font-medium text-primary-800">
                                         {user ? `✨ Selamat Datang, ${user.name}` : '✨ Selamat Datang di LabSystem'}
                                     </div>
-                                    <h1 className="text-4xl font-extrabold tracking-tight text-slate-900 dark:text-white sm:text-5xl">
+                                    <h1 className="text-4xl font-extrabold tracking-tight text-slate-900 sm:text-5xl">
                                         Sistem Laboratorium Sekolah
-                                        <span className="block text-primary-600 dark:text-primary-400">Terpadu & Modern</span>
+                                        <span className="block text-primary-600">Terpadu & Modern</span>
                                     </h1>
-                                    <p className="text-lg text-slate-600 dark:text-slate-300">
+                                    <p className="text-lg text-slate-600">
                                         Pinjam alat praktikum dengan mudah, cek ketersediaan, dan kembalikan tepat waktu.
                                     </p>
                                     <div className="pt-4 flex items-center gap-2">
@@ -227,7 +227,7 @@ export default function Dashboard() {
                                             loading={aiLoading}
                                             onSubmit={handleAiSearch}
                                         />
-                                        <p className="text-xs text-slate-500 dark:text-slate-400 mt-2 pl-4">
+                                        <p className="text-xs text-slate-500 mt-2 pl-4">
                                             Contoh: "Sistem irigasi otomatis dengan sensor kelembaban"
                                         </p>
                                     </div>
@@ -285,13 +285,13 @@ export default function Dashboard() {
                     {user && (
                         <FadeIn delay={0.3}>
                             <div>
-                                <h2 className="text-2xl font-bold tracking-tight text-slate-900 dark:text-white mb-6">Ringkasan Aktivitas</h2>
+                                <h2 className="text-2xl font-bold tracking-tight text-slate-900 mb-6">Ringkasan Aktivitas</h2>
                                 <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
                                     <Link to="/peminjaman">
-                                        <StatCard title="Barang Dipinjam" value={stats?.activeLoans} icon={Clock} color="text-amber-600 dark:text-amber-400" bg="bg-amber-50 dark:bg-amber-900/20" />
+                                        <StatCard title="Barang Dipinjam" value={stats?.activeLoans} icon={Clock} color="text-amber-600" bg="bg-amber-50" />
                                     </Link>
                                     <Link to="/peminjaman">
-                                        <StatCard title="Total Riwayat" value={stats?.totalHistory} icon={CheckCircle} color="text-blue-600 dark:text-blue-400" bg="bg-blue-50 dark:bg-blue-900/20" />
+                                        <StatCard title="Total Riwayat" value={stats?.totalHistory} icon={CheckCircle} color="text-blue-600" bg="bg-blue-50" />
                                     </Link>
 
                                     {/* Compliance Section */}
@@ -329,27 +329,27 @@ export default function Dashboard() {
                     {/* Public Features Section for Guests */}
                     {!user && (
                         <FadeIn delay={0.3}>
-                            <div className="grid md:grid-cols-3 gap-8 py-12 border-t border-slate-100 dark:border-slate-800" onClickCapture={handleGuestAction}>
-                                <div className="space-y-4 cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-800/50 p-4 rounded-xl transition-colors">
-                                    <div className="w-12 h-12 bg-blue-100 dark:bg-blue-900/30 rounded-xl flex items-center justify-center text-blue-600 dark:text-blue-400">
+                            <div className="grid md:grid-cols-3 gap-8 py-12 border-t border-slate-100" onClickCapture={handleGuestAction}>
+                                <div className="space-y-4 cursor-pointer hover:bg-slate-50 p-4 rounded-xl transition-colors">
+                                    <div className="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center text-blue-600">
                                         <Package size={24} />
                                     </div>
-                                    <h3 className="text-xl font-bold text-slate-900 dark:text-white">Inventaris Lengkap</h3>
-                                    <p className="text-slate-500 dark:text-slate-400">Katalog alat laboratorium yang selalu diperbarui dengan informasi stok real-time.</p>
+                                    <h3 className="text-xl font-bold text-slate-900">Inventaris Lengkap</h3>
+                                    <p className="text-slate-500">Katalog alat laboratorium yang selalu diperbarui dengan informasi stok real-time.</p>
                                 </div>
-                                <div className="space-y-4 cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-800/50 p-4 rounded-xl transition-colors">
-                                    <div className="w-12 h-12 bg-green-100 dark:bg-green-900/30 rounded-xl flex items-center justify-center text-green-600 dark:text-green-400">
+                                <div className="space-y-4 cursor-pointer hover:bg-slate-50 p-4 rounded-xl transition-colors">
+                                    <div className="w-12 h-12 bg-green-100 rounded-xl flex items-center justify-center text-green-600">
                                         <Clock size={24} />
                                     </div>
-                                    <h3 className="text-xl font-bold text-slate-900 dark:text-white">Peminjaman Mudah</h3>
-                                    <p className="text-slate-500 dark:text-slate-400">Proses peminjaman digital yang cepat dan efisien tanpa formulir kertas.</p>
+                                    <h3 className="text-xl font-bold text-slate-900">Peminjaman Mudah</h3>
+                                    <p className="text-slate-500">Proses peminjaman digital yang cepat dan efisien tanpa formulir kertas.</p>
                                 </div>
-                                <div className="space-y-4 cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-800/50 p-4 rounded-xl transition-colors">
-                                    <div className="w-12 h-12 bg-purple-100 dark:bg-purple-900/30 rounded-xl flex items-center justify-center text-purple-600 dark:text-purple-400">
+                                <div className="space-y-4 cursor-pointer hover:bg-slate-50 p-4 rounded-xl transition-colors">
+                                    <div className="w-12 h-12 bg-purple-100 rounded-xl flex items-center justify-center text-purple-600">
                                         <CheckCircle size={24} />
                                     </div>
-                                    <h3 className="text-xl font-bold text-slate-900 dark:text-white">Monitoring Kondisi</h3>
-                                    <p className="text-slate-500 dark:text-slate-400">Pelaporan dan pemantauan kondisi alat untuk memastikan kualitas praktikum.</p>
+                                    <h3 className="text-xl font-bold text-slate-900">Monitoring Kondisi</h3>
+                                    <p className="text-slate-500">Pelaporan dan pemantauan kondisi alat untuk memastikan kualitas praktikum.</p>
                                 </div>
                             </div>
                         </FadeIn>
@@ -363,14 +363,14 @@ export default function Dashboard() {
 
 function StatCard({ title, value, icon: Icon, color, bg }) {
     return (
-        <Card className="border-none shadow-sm hover:shadow-md transition-shadow dark:bg-slate-800">
+        <Card className="border-none shadow-sm hover:shadow-md transition-shadow">
             <CardContent className="p-6 flex items-center gap-4">
                 <div className={`p-3 rounded-xl ${bg}`}>
                     <Icon className={`h-6 w-6 ${color}`} />
                 </div>
                 <div>
-                    <p className="text-sm font-medium text-slate-500 dark:text-slate-400">{title}</p>
-                    <h4 className="text-2xl font-bold text-slate-900 dark:text-white">{value || 0}</h4>
+                    <p className="text-sm font-medium text-slate-500">{title}</p>
+                    <h4 className="text-2xl font-bold text-slate-900">{value || 0}</h4>
                 </div>
             </CardContent>
         </Card>
@@ -379,11 +379,11 @@ function StatCard({ title, value, icon: Icon, color, bg }) {
 
 function Badge({ status }) {
     const styles = {
-        Diajukan: 'bg-yellow-50 dark:bg-yellow-900/20 text-yellow-700 dark:text-yellow-400 border-yellow-200 dark:border-yellow-900/30',
-        Disetujui: 'bg-green-50 dark:bg-green-900/20 text-green-700 dark:text-green-400 border-green-200 dark:border-green-900/30',
-        Dipinjam: 'bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-400 border-blue-200 dark:border-blue-900/30',
-        Ditolak: 'bg-red-50 dark:bg-red-900/20 text-red-700 dark:text-red-400 border-red-200 dark:border-red-900/30',
-        Selesai: 'bg-slate-50 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border-slate-200 dark:border-slate-700',
+        Diajukan: 'bg-yellow-50 text-yellow-700 border-yellow-200',
+        Disetujui: 'bg-green-50 text-green-700 border-green-200',
+        Dipinjam: 'bg-blue-50 text-blue-700 border-blue-200',
+        Ditolak: 'bg-red-50 text-red-700 border-red-200',
+        Selesai: 'bg-slate-50 text-slate-700 border-slate-200',
     };
     return (
         <span className={`px-3 py-1 rounded-full text-xs font-medium border ${styles[status] || 'bg-gray-100'}`}>
