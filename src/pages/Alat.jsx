@@ -319,7 +319,10 @@ export default function Alat() {
 
             {/* Modal Form (Admin) - Rendered via Portal */}
             {modalOpen && ReactDOM.createPortal(
-                <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm animate-in fade-in duration-300">
+                <div
+                    className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm animate-in fade-in duration-300"
+                    onClick={(e) => e.target === e.currentTarget && setModalOpen(false)}
+                >
                     <div className="w-full max-w-lg max-h-[90vh] bg-white rounded-2xl flex flex-col shadow-2xl animate-in zoom-in-95 duration-300">
                         <Card className="border-none shadow-none flex flex-col h-full bg-transparent">
                             <div className="px-6 py-4 border-b border-slate-100 flex justify-between items-center bg-slate-50/50">
@@ -333,8 +336,8 @@ export default function Alat() {
                             </div>
 
                             <form onSubmit={handleSubmit} className="flex flex-col flex-1 overflow-hidden">
-                                <CardContent className="p-6 space-y-6 overflow-y-auto">
-                                    <div className="space-y-4">
+                                <CardContent className="p-6 pb-2 space-y-6 overflow-y-auto">
+                                    <div className="space-y-4 pb-4">
                                         <div className="space-y-1.5">
                                             <label className="text-sm font-semibold text-slate-700">Nama Alat</label>
                                             <Input
