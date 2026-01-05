@@ -154,17 +154,17 @@ export default function Alat() {
         <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
             {/* Header & Actions */}
             <FadeIn>
-                <div className="relative bg-white rounded-3xl overflow-hidden shadow-sm border border-slate-100 mb-8">
-                    <div className="absolute inset-0 bg-gradient-to-r from-primary-600 to-blue-400 opacity-10"></div>
+                <div className="relative bg-white dark:bg-slate-800 rounded-3xl overflow-hidden shadow-sm border border-slate-100 dark:border-slate-700 mb-8">
+                    <div className="absolute inset-0 bg-gradient-to-r from-primary-600 to-blue-400 opacity-10 dark:opacity-20"></div>
                     <div className="relative px-8 py-8 md:px-12 flex flex-col md:flex-row items-center justify-between gap-8">
                         <div className="space-y-4 max-w-lg">
-                            <div className="inline-flex items-center rounded-full border border-primary-200 bg-primary-50 px-3 py-1 text-sm font-medium text-primary-800">
+                            <div className="inline-flex items-center rounded-full border border-primary-200 dark:border-primary-800 bg-primary-50 dark:bg-primary-900/30 px-3 py-1 text-sm font-medium text-primary-800 dark:text-primary-200">
                                 🛠️ Katalog Inventaris
                             </div>
-                            <h1 className="text-3xl font-extrabold tracking-tight text-slate-900">
-                                {user?.role === 'admin' ? 'Kelola Inventaris' : 'Temukan Alat'} <span className="text-primary-600">Lab Anda</span>
+                            <h1 className="text-3xl font-extrabold tracking-tight text-slate-900 dark:text-white">
+                                {user?.role === 'admin' ? 'Kelola Inventaris' : 'Temukan Alat'} <span className="text-primary-600 dark:text-primary-400">Lab Anda</span>
                             </h1>
-                            <p className="text-slate-600">
+                            <p className="text-slate-600 dark:text-slate-300">
                                 {user?.role === 'admin'
                                     ? 'Pantau dan kelola ketersediaan alat laboratorium secara real-time.'
                                     : 'Cari dan pinjam peralatan praktikum dengan cepat dan mudah.'}
@@ -213,9 +213,9 @@ export default function Alat() {
                     <AnimatedList className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 md:gap-6">
                         {filteredAlat.map((item) => (
                             <AnimatedItem key={item.id_alat}>
-                                <Card className="group overflow-hidden border-none shadow-sm hover:shadow-xl transition-all duration-300 bg-white rounded-2xl h-full flex flex-col">
+                                <Card className="group overflow-hidden border-none shadow-sm hover:shadow-xl transition-all duration-300 bg-white dark:bg-slate-800 rounded-2xl h-full flex flex-col">
                                     {/* Image Placeholder */}
-                                    <div className="aspect-[4/3] bg-slate-50 flex items-center justify-center relative group-hover:bg-slate-100 transition-colors overflow-hidden">
+                                    <div className="aspect-[4/3] bg-slate-50 dark:bg-slate-700 flex items-center justify-center relative group-hover:bg-slate-100 dark:group-hover:bg-slate-600 transition-colors overflow-hidden">
                                         {item.gambar_url ? (
                                             <img
                                                 src={item.gambar_url}
@@ -223,7 +223,7 @@ export default function Alat() {
                                                 className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                                             />
                                         ) : (
-                                            <div className="text-slate-300 group-hover:scale-110 group-hover:text-primary-200 transition-all duration-500">
+                                            <div className="text-slate-300 dark:text-slate-600 group-hover:scale-110 group-hover:text-primary-200 dark:group-hover:text-primary-900 transition-all duration-500">
                                                 <Beaker size={80} strokeWidth={1} />
                                             </div>
                                         )}
@@ -239,17 +239,17 @@ export default function Alat() {
 
                                     <CardContent className="p-3 md:p-5 flex-1">
                                         <div className="mb-3">
-                                            <h3 className="font-bold text-base md:text-lg text-slate-900 line-clamp-1 group-hover:text-primary-600 transition-colors">{item.nama_alat}</h3>
-                                            <p className="text-sm text-slate-500 font-medium">{item.kode_alat}</p>
+                                            <h3 className="font-bold text-base md:text-lg text-slate-900 dark:text-white line-clamp-1 group-hover:text-primary-600 dark:group-hover:text-primary-400 transition-colors">{item.nama_alat}</h3>
+                                            <p className="text-sm text-slate-500 dark:text-slate-400 font-medium">{item.kode_alat}</p>
                                         </div>
 
                                         <div className="flex flex-wrap gap-2 text-xs">
-                                            <span className="px-2 py-1 rounded-md bg-slate-100 text-slate-600 font-medium">
+                                            <span className="px-2 py-1 rounded-md bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 font-medium">
                                                 📍 {item.lokasi}
                                             </span>
                                             <span className={cn(
                                                 "px-2 py-1 rounded-md font-medium",
-                                                item.kondisi === 'Baik' ? "bg-blue-50 text-blue-700" : "bg-orange-50 text-orange-700"
+                                                item.kondisi === 'Baik' ? "bg-blue-50 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300" : "bg-orange-50 dark:bg-orange-900/30 text-orange-700 dark:text-orange-300"
                                             )}>
                                                 🛠 {item.kondisi}
                                             </span>
@@ -261,14 +261,14 @@ export default function Alat() {
                                             <div className="flex w-full gap-3 opacity-90 group-hover:opacity-100 transition-opacity">
                                                 <Button
                                                     size="sm"
-                                                    className="flex-1 bg-amber-50 text-amber-700 hover:bg-amber-100 border border-amber-200 shadow-sm"
+                                                    className="flex-1 bg-amber-50 dark:bg-amber-900/20 text-amber-700 dark:text-amber-400 hover:bg-amber-100 dark:hover:bg-amber-900/30 border border-amber-200 dark:border-amber-900/30 shadow-sm"
                                                     onClick={() => openEdit(item)}
                                                 >
                                                     <Edit size={16} className="mr-2" /> Edit
                                                 </Button>
                                                 <Button
                                                     size="icon"
-                                                    className="bg-red-50 text-red-700 hover:bg-red-100 border border-red-200 shadow-sm w-10 flex-shrink-0"
+                                                    className="bg-red-50 dark:bg-red-900/20 text-red-700 dark:text-red-400 hover:bg-red-100 dark:hover:bg-red-900/30 border border-red-200 dark:border-red-900/30 shadow-sm w-10 flex-shrink-0"
                                                     onClick={() => handleDelete(item.id_alat)}
                                                 >
                                                     <Trash2 size={18} />
@@ -279,7 +279,7 @@ export default function Alat() {
                                                 className={cn(
                                                     "w-full transition-all shadow-sm hover:shadow",
                                                     cart.find(c => c.id_alat === item.id_alat)
-                                                        ? "bg-green-600 hover:bg-green-700 ring-2 ring-emerald-100"
+                                                        ? "bg-green-600 hover:bg-green-700 ring-2 ring-emerald-100 dark:ring-emerald-900/20"
                                                         : "bg-primary-600 hover:bg-primary-700"
                                                 )}
                                                 disabled={item.status !== 'Tersedia'}
@@ -332,15 +332,15 @@ export default function Alat() {
                             animate={{ scale: 1, opacity: 1, y: 0 }}
                             exit={{ scale: 0.95, opacity: 0, y: 10 }}
                             transition={{ type: "spring", duration: 0.3 }}
-                            className="w-full max-w-lg max-h-[90vh] bg-white rounded-2xl flex flex-col shadow-2xl"
+                            className="w-full max-w-lg max-h-[90vh] bg-white dark:bg-slate-900 rounded-2xl flex flex-col shadow-2xl"
                         >
                             <Card className="border-none shadow-none flex flex-col h-full bg-transparent">
-                                <div className="px-6 py-4 border-b border-slate-100 flex justify-between items-center bg-slate-50/50">
-                                    <h2 className="text-xl font-bold text-slate-800 flex items-center gap-2">
-                                        {editId ? <Edit size={20} className="text-blue-600" /> : <Plus size={20} className="text-green-600" />}
+                                <div className="px-6 py-4 border-b border-slate-100 dark:border-slate-800 flex justify-between items-center bg-slate-50/50 dark:bg-slate-800/50">
+                                    <h2 className="text-xl font-bold text-slate-800 dark:text-white flex items-center gap-2">
+                                        {editId ? <Edit size={20} className="text-blue-600 dark:text-blue-400" /> : <Plus size={20} className="text-green-600 dark:text-green-400" />}
                                         {editId ? 'Edit Data Alat' : 'Tambah Inventaris Baru'}
                                     </h2>
-                                    <Button variant="ghost" size="icon" onClick={() => setModalOpen(false)} className="rounded-full hover:bg-slate-200/50 text-slate-500">
+                                    <Button variant="ghost" size="icon" onClick={() => setModalOpen(false)} className="rounded-full hover:bg-slate-200/50 dark:hover:bg-slate-800/50 text-slate-500">
                                         <X size={20} />
                                     </Button>
                                 </div>
@@ -349,22 +349,22 @@ export default function Alat() {
                                     <CardContent className="p-6 space-y-6 overflow-y-auto">
                                         <div className="space-y-4">
                                             <div className="space-y-1.5">
-                                                <label className="text-sm font-semibold text-slate-700">Nama Alat</label>
+                                                <label className="text-sm font-semibold text-slate-700 dark:text-slate-300">Nama Alat</label>
                                                 <Input
                                                     required
                                                     value={formData.nama_alat}
                                                     onChange={e => setFormData({ ...formData, nama_alat: e.target.value })}
                                                     placeholder="Contoh: Mikroskop Binokuler X200"
-                                                    className="h-11 bg-slate-50 border-slate-200 focus:bg-white transition-colors"
+                                                    className="h-11 bg-slate-50 dark:bg-slate-800 border-slate-200 dark:border-slate-700 focus:bg-white dark:focus:bg-slate-900 transition-colors"
                                                 />
                                             </div>
 
                                             {/* Image Upload */}
                                             <div className="space-y-1.5">
-                                                <label className="text-sm font-semibold text-slate-700">Gambar Alat (Opsional)</label>
+                                                <label className="text-sm font-semibold text-slate-700 dark:text-slate-300">Gambar Alat (Opsional)</label>
                                                 <div className="flex flex-col gap-3">
                                                     {imagePreview ? (
-                                                        <div className="relative w-full h-48 bg-slate-100 rounded-lg overflow-hidden border-2 border-slate-200">
+                                                        <div className="relative w-full h-48 bg-slate-100 dark:bg-slate-800 rounded-lg overflow-hidden border-2 border-slate-200 dark:border-slate-700">
                                                             <img
                                                                 src={imagePreview}
                                                                 alt="Preview"
@@ -387,19 +387,19 @@ export default function Alat() {
                                                         </div>
                                                     ) : (
                                                         <label className={cn(
-                                                            "w-full h-48 flex flex-col items-center justify-center border-2 border-dashed border-slate-300 rounded-lg transition-all bg-slate-50 relative",
-                                                            uploading ? "cursor-wait opacity-70" : "cursor-pointer hover:border-primary-500 hover:bg-primary-50/50"
+                                                            "w-full h-48 flex flex-col items-center justify-center border-2 border-dashed border-slate-300 dark:border-slate-700 rounded-lg transition-all bg-slate-50 dark:bg-slate-800 relative",
+                                                            uploading ? "cursor-wait opacity-70" : "cursor-pointer hover:border-primary-500 hover:bg-primary-50/50 dark:hover:bg-primary-900/10"
                                                         )}>
                                                             {uploading ? (
-                                                                <div className="flex flex-col items-center gap-2 text-primary-600">
+                                                                <div className="flex flex-col items-center gap-2 text-primary-600 dark:text-primary-400">
                                                                     <Loader2 className="w-8 h-8 animate-spin" />
                                                                     <span className="text-sm font-medium">Mengompres & Mengupload...</span>
                                                                 </div>
                                                             ) : (
-                                                                <div className="flex flex-col items-center gap-2 text-slate-500">
-                                                                    <Plus size={32} className="text-slate-400" />
+                                                                <div className="flex flex-col items-center gap-2 text-slate-500 dark:text-slate-400">
+                                                                    <Plus size={32} className="text-slate-400 dark:text-slate-500" />
                                                                     <span className="text-sm font-medium">Klik untuk upload gambar</span>
-                                                                    <span className="text-xs text-slate-400">PNG, JPG (Max 5MB)</span>
+                                                                    <span className="text-xs text-slate-400 dark:text-slate-500">PNG, JPG (Max 5MB)</span>
                                                                 </div>
                                                             )}
                                                             <input
@@ -416,33 +416,33 @@ export default function Alat() {
 
                                             <div className="grid grid-cols-2 gap-4">
                                                 <div className="space-y-1.5">
-                                                    <label className="text-sm font-semibold text-slate-700">Kode Inventaris</label>
+                                                    <label className="text-sm font-semibold text-slate-700 dark:text-slate-300">Kode Inventaris</label>
                                                     <Input
                                                         required
                                                         value={formData.kode_alat}
                                                         onChange={e => setFormData({ ...formData, kode_alat: e.target.value })}
                                                         placeholder="Contoh: BIO-001"
-                                                        className="bg-slate-50 border-slate-200 focus:bg-white"
+                                                        className="bg-slate-50 dark:bg-slate-800 border-slate-200 dark:border-slate-700 focus:bg-white dark:focus:bg-slate-900"
                                                     />
                                                 </div>
                                                 <div className="space-y-1.5">
-                                                    <label className="text-sm font-semibold text-slate-700">Lokasi Penyimpanan</label>
+                                                    <label className="text-sm font-semibold text-slate-700 dark:text-slate-300">Lokasi Penyimpanan</label>
                                                     <Input
                                                         required
                                                         value={formData.lokasi}
                                                         onChange={e => setFormData({ ...formData, lokasi: e.target.value })}
                                                         placeholder="Contoh: Lemari A, Rak 2"
-                                                        className="bg-slate-50 border-slate-200 focus:bg-white"
+                                                        className="bg-slate-50 dark:bg-slate-800 border-slate-200 dark:border-slate-700 focus:bg-white dark:focus:bg-slate-900"
                                                     />
                                                 </div>
                                             </div>
 
                                             <div className="grid grid-cols-2 gap-4">
                                                 <div className="space-y-1.5">
-                                                    <label className="text-sm font-semibold text-slate-700">Kondisi Fisik</label>
+                                                    <label className="text-sm font-semibold text-slate-700 dark:text-slate-300">Kondisi Fisik</label>
                                                     <div className="relative">
                                                         <select
-                                                            className="w-full h-10 rounded-md border border-slate-200 bg-slate-50 px-3 text-sm focus:bg-white focus:outline-none focus:ring-2 focus:ring-primary-500 transition-colors appearance-none"
+                                                            className="w-full h-10 rounded-md border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 px-3 text-sm text-slate-900 dark:text-white focus:bg-white dark:focus:bg-slate-900 focus:outline-none focus:ring-2 focus:ring-primary-500 transition-colors appearance-none"
                                                             value={formData.kondisi}
                                                             onChange={e => setFormData({ ...formData, kondisi: e.target.value })}
                                                         >
@@ -456,10 +456,10 @@ export default function Alat() {
                                                     </div>
                                                 </div>
                                                 <div className="space-y-1.5">
-                                                    <label className="text-sm font-semibold text-slate-700">Status Peminjaman</label>
+                                                    <label className="text-sm font-semibold text-slate-700 dark:text-slate-300">Status Peminjaman</label>
                                                     <div className="relative">
                                                         <select
-                                                            className="w-full h-10 rounded-md border border-slate-200 bg-slate-50 px-3 text-sm focus:bg-white focus:outline-none focus:ring-2 focus:ring-primary-500 transition-colors appearance-none"
+                                                            className="w-full h-10 rounded-md border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 px-3 text-sm text-slate-900 dark:text-white focus:bg-white dark:focus:bg-slate-900 focus:outline-none focus:ring-2 focus:ring-primary-500 transition-colors appearance-none"
                                                             value={formData.status}
                                                             onChange={e => setFormData({ ...formData, status: e.target.value })}
                                                         >
@@ -475,13 +475,13 @@ export default function Alat() {
                                                 </div>
                                             </div>
 
-                                            <div className="bg-blue-50 text-blue-800 text-xs p-3 rounded-lg flex items-start gap-2">
+                                            <div className="bg-blue-50 dark:bg-blue-900/20 text-blue-800 dark:text-blue-300 text-xs p-3 rounded-lg flex items-start gap-2">
                                                 <AlertCircle size={14} className="mt-0.5" />
                                                 <p>Pastikan kode inventaris unik. Data yang disimpan akan langsung diperbarui di katalog publik.</p>
                                             </div>
                                         </div>
                                     </CardContent>
-                                    <CardFooter className="flex justify-end gap-3 p-6 bg-slate-50/50 border-t border-slate-100">
+                                    <CardFooter className="flex justify-end gap-3 p-6 bg-slate-50/50 dark:bg-slate-800/50 border-t border-slate-100 dark:border-slate-800">
                                         <Button type="button" variant="ghost" onClick={() => setModalOpen(false)} className="hover:bg-slate-200">Batal</Button>
                                         <Button type="submit" className={cn("min-w-[120px]", editId ? "bg-blue-600 hover:bg-blue-700" : "bg-primary-600 hover:bg-primary-700")}>
                                             <Save size={16} className="mr-2" />

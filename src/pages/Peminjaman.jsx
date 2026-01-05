@@ -134,8 +134,8 @@ export default function Peminjaman() {
             <FadeIn>
                 <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
                     <div>
-                        <h1 className="text-3xl font-bold tracking-tight text-slate-900">Riwayat Peminjaman</h1>
-                        <p className="text-slate-500 mt-2">
+                        <h1 className="text-3xl font-bold tracking-tight text-slate-900 dark:text-white">Riwayat Peminjaman</h1>
+                        <p className="text-slate-500 dark:text-slate-400 mt-2">
                             {user?.role === 'admin'
                                 ? 'Kelola dan pantau semua transaksi peminjaman alat laboratorium.'
                                 : 'Lihat status dan riwayat peminjaman alat Anda.'}
@@ -166,7 +166,7 @@ export default function Peminjaman() {
                                     "px-4 py-2 rounded-lg text-sm font-medium transition-all whitespace-nowrap",
                                     filter === key
                                         ? "bg-primary-600 text-white shadow-sm"
-                                        : "bg-white text-slate-600 hover:bg-slate-50 border border-slate-200"
+                                        : "bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-700 border border-slate-200 dark:border-slate-700"
                                 )}
                             >
                                 {label} <span className="ml-1.5 opacity-75">({count})</span>
@@ -188,16 +188,16 @@ export default function Peminjaman() {
             {loading ? (
                 <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
                     {[1, 2, 3, 4, 5, 6].map(i => (
-                        <div key={i} className="h-64 bg-slate-100 rounded-2xl animate-pulse"></div>
+                        <div key={i} className="h-64 bg-slate-100 dark:bg-slate-800 rounded-2xl animate-pulse"></div>
                     ))}
                 </div>
             ) : filteredLoans.length === 0 ? (
                 <FadeIn delay={0.2}>
                     <Card className="border-dashed">
                         <CardContent className="flex flex-col items-center justify-center py-16 text-center">
-                            <Package size={48} className="text-slate-300 mb-4" />
-                            <h3 className="text-lg font-semibold text-slate-900 mb-2">Belum Ada Data</h3>
-                            <p className="text-slate-500">
+                            <Package size={48} className="text-slate-300 dark:text-slate-700 mb-4" />
+                            <h3 className="text-lg font-semibold text-slate-900 dark:text-white mb-2">Belum Ada Data</h3>
+                            <p className="text-slate-500 dark:text-slate-400">
                                 {filter === 'all'
                                     ? 'Belum ada riwayat peminjaman.'
                                     : `Tidak ada peminjaman dengan status "${filter}".`}
@@ -212,11 +212,11 @@ export default function Peminjaman() {
                             const statusConfig = getStatusConfig(loan.status_pinjam);
                             const compliance = getComplianceInfo(loan.compliance_score || 80);
                             return (
-                                <Card key={loan.id_peminjam} className="group hover:shadow-lg transition-all duration-300 border-none shadow-sm bg-white rounded-2xl overflow-hidden">
-                                    <CardHeader className="pb-3 bg-gradient-to-br from-slate-50 to-white border-b border-slate-100">
+                                <Card key={loan.id_peminjam} className="group hover:shadow-lg transition-all duration-300 border-none shadow-sm bg-white dark:bg-slate-800 rounded-2xl overflow-hidden">
+                                    <CardHeader className="pb-3 bg-gradient-to-br from-slate-50 to-white dark:from-slate-800 dark:to-slate-800/50 border-b border-slate-100 dark:border-slate-700">
                                         <div className="flex items-start justify-between">
                                             <div className="flex-1">
-                                                <div className="text-xs font-semibold text-slate-500 mb-1 flex items-center gap-2">
+                                                <div className="text-xs font-semibold text-slate-500 dark:text-slate-400 mb-1 flex items-center gap-2">
                                                     ID #{loan.id_peminjam}
                                                     {user?.role === 'admin' && (
                                                         <span className={cn("px-2 py-0.5 rounded-full text-[10px] font-bold border", compliance.color)}>
@@ -224,7 +224,7 @@ export default function Peminjaman() {
                                                         </span>
                                                     )}
                                                 </div>
-                                                <CardTitle className="text-lg font-bold text-slate-900 line-clamp-1">
+                                                <CardTitle className="text-lg font-bold text-slate-900 dark:text-white line-clamp-1">
                                                     {loan.nama_peminjam}
                                                 </CardTitle>
                                             </div>
@@ -238,32 +238,32 @@ export default function Peminjaman() {
                                     <CardContent className="p-5 space-y-4">
                                         {/* Dates */}
                                         <div className="space-y-2">
-                                            <div className="flex items-center gap-2 text-sm text-slate-600">
+                                            <div className="flex items-center gap-2 text-sm text-slate-600 dark:text-slate-300">
                                                 <Calendar size={16} className="text-slate-400" />
-                                                <span className="font-medium text-slate-500 w-24">Tgl Pinjam:</span>
+                                                <span className="font-medium text-slate-500 dark:text-slate-400 w-24">Tgl Pinjam:</span>
                                                 <span>{format(new Date(loan.tanggal_pinjam), 'dd MMM yyyy')}</span>
                                             </div>
                                             {loan.tanggal_kembali_rencana && (
                                                 <div className="flex items-center gap-2 text-sm">
                                                     <Clock size={16} className="text-slate-400" />
-                                                    <span className="font-medium text-slate-500 w-24">Batas:</span>
+                                                    <span className="font-medium text-slate-500 dark:text-slate-400 w-24">Batas:</span>
                                                     <span className={cn(
                                                         "font-semibold",
                                                         loan.status_pinjam === 'Dipinjam' && isAfter(new Date(), new Date(loan.tanggal_kembali_rencana))
                                                             ? "text-red-600 animate-pulse"
-                                                            : "text-slate-700"
+                                                            : "text-slate-700 dark:text-slate-300"
                                                     )}>
                                                         {format(new Date(loan.tanggal_kembali_rencana), 'dd MMM yyyy')}
                                                     </span>
                                                     {loan.status_pinjam === 'Dipinjam' && isAfter(new Date(), new Date(loan.tanggal_kembali_rencana)) && (
-                                                        <span className="px-1.5 py-0.5 rounded bg-red-100 text-red-700 text-[10px] font-bold uppercase">Terlambat</span>
+                                                        <span className="px-1.5 py-0.5 rounded bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-300 text-[10px] font-bold uppercase">Terlambat</span>
                                                     )}
                                                 </div>
                                             )}
                                             {loan.tanggal_kembali && (
-                                                <div className="flex items-center gap-2 text-sm text-slate-600">
+                                                <div className="flex items-center gap-2 text-sm text-slate-600 dark:text-slate-300">
                                                     <CheckCircle2 size={16} className="text-green-500" />
-                                                    <span className="font-medium text-slate-500 w-24">Kembali:</span>
+                                                    <span className="font-medium text-slate-500 dark:text-slate-400 w-24">Kembali:</span>
                                                     <span>{format(new Date(loan.tanggal_kembali), 'dd MMM yyyy')}</span>
                                                 </div>
                                             )}
@@ -271,12 +271,12 @@ export default function Peminjaman() {
 
                                         {/* Fine info if exists */}
                                         {parseFloat(loan.denda) > 0 && (
-                                            <div className="bg-red-50 border border-red-100 p-2 rounded-lg flex items-center justify-between">
-                                                <div className="flex items-center gap-2 text-xs font-bold text-red-700">
+                                            <div className="bg-red-50 dark:bg-red-900/20 border border-red-100 dark:border-red-900/30 p-2 rounded-lg flex items-center justify-between">
+                                                <div className="flex items-center gap-2 text-xs font-bold text-red-700 dark:text-red-400">
                                                     <AlertCircle size={14} />
                                                     Denda Keterlambatan
                                                 </div>
-                                                <div className="text-sm font-black text-red-700">
+                                                <div className="text-sm font-black text-red-700 dark:text-red-400">
                                                     {formatIDR(loan.denda)}
                                                 </div>
                                             </div>
@@ -284,7 +284,7 @@ export default function Peminjaman() {
 
                                         {/* Items */}
                                         <div>
-                                            <div className="flex items-center gap-2 text-xs font-semibold text-slate-500 mb-2">
+                                            <div className="flex items-center gap-2 text-xs font-semibold text-slate-500 dark:text-slate-400 mb-2">
                                                 <Package size={14} />
                                                 <span>Alat Dipinjam</span>
                                             </div>
@@ -292,7 +292,7 @@ export default function Peminjaman() {
                                                 {loan.details?.map((d) => (
                                                     <li key={d.id_detail} className="flex items-start gap-2 text-sm">
                                                         <span className="w-1.5 h-1.5 rounded-full bg-primary-500 mt-1.5 flex-shrink-0"></span>
-                                                        <span className="text-slate-700">{d.nama_alat} <span className="text-slate-400">({d.kode_alat})</span></span>
+                                                        <span className="text-slate-700 dark:text-slate-300">{d.nama_alat} <span className="text-slate-400 dark:text-slate-500">({d.kode_alat})</span></span>
                                                     </li>
                                                 ))}
                                             </ul>
@@ -300,7 +300,7 @@ export default function Peminjaman() {
 
                                         {/* Admin Info */}
                                         {loan.id_petugas && (
-                                            <div className="flex items-center gap-2 text-xs text-slate-500 pt-2 border-t border-slate-100">
+                                            <div className="flex items-center gap-2 text-xs text-slate-500 dark:text-slate-400 pt-2 border-t border-slate-100 dark:border-slate-700">
                                                 <User size={14} />
                                                 <span>Petugas: {loan.nama_petugas}</span>
                                             </div>
@@ -308,14 +308,14 @@ export default function Peminjaman() {
 
                                         {/* Actions Area */}
                                         {(user?.role === 'admin' || (loan.status_pinjam === 'Selesai' || loan.status_pinjam === 'Ditolak')) && (
-                                            <div className="pt-2 border-t border-slate-100 space-y-2">
+                                            <div className="pt-2 border-t border-slate-100 dark:border-slate-700 space-y-2">
                                                 {/* Admin Only: Approve/Reject/Return */}
                                                 {user?.role === 'admin' && (
                                                     <>
                                                         {loan.status_pinjam === 'Diajukan' && (
                                                             <div className="relative">
                                                                 <select
-                                                                    className="w-full h-10 rounded-lg border border-slate-200 bg-white px-4 pr-10 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-all appearance-none cursor-pointer hover:border-primary-400"
+                                                                    className="w-full h-10 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 px-4 pr-10 text-sm font-medium text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-all appearance-none cursor-pointer hover:border-primary-400"
                                                                     onChange={(e) => {
                                                                         if (e.target.value) {
                                                                             handleAction(loan.id_peminjam, e.target.value);
@@ -328,7 +328,7 @@ export default function Peminjaman() {
                                                                     <option value="approve">✓ Setujui Peminjaman</option>
                                                                     <option value="reject">✗ Tolak Peminjaman</option>
                                                                 </select>
-                                                                <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-slate-500">
+                                                                <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-slate-500 dark:text-slate-400">
                                                                     <svg className="h-4 w-4 fill-current" viewBox="0 0 20 20">
                                                                         <path d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clipRule="evenodd" fillRule="evenodd"></path>
                                                                     </svg>
@@ -375,7 +375,7 @@ export default function Peminjaman() {
                                                     <Button
                                                         variant="ghost"
                                                         size="sm"
-                                                        className="w-full text-red-600 hover:text-red-700 hover:bg-red-50"
+                                                        className="w-full text-red-600 hover:text-red-700 hover:bg-red-50 dark:hover:bg-red-900/10"
                                                         onClick={() => handleDelete(loan.id_peminjam)}
                                                     >
                                                         <Trash2 size={16} className="mr-1.5" /> Hapus Riwayat
@@ -394,9 +394,9 @@ export default function Peminjaman() {
             {/* Return Modal - Using Portal */}
             {returnModal && ReactDOM.createPortal(
                 <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm transition-all duration-300">
-                    <Card className="w-full max-w-md animate-in fade-in zoom-in-95 duration-200 border-none shadow-2xl bg-white rounded-2xl">
-                        <CardHeader className="border-b border-slate-100 bg-slate-50/50">
-                            <CardTitle className="flex items-center gap-2 text-xl">
+                    <Card className="w-full max-w-md animate-in fade-in zoom-in-95 duration-200 border-none shadow-2xl bg-white dark:bg-slate-900 rounded-2xl">
+                        <CardHeader className="border-b border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-800/50">
+                            <CardTitle className="flex items-center gap-2 text-xl text-slate-900 dark:text-white">
                                 <CheckCircle2 size={24} className="text-green-600" />
                                 Proses Pengembalian
                             </CardTitle>
@@ -412,24 +412,24 @@ export default function Peminjaman() {
                             }} className="space-y-5">
                                 {/* Borrower Info */}
                                 <div className="space-y-3">
-                                    <div className="bg-blue-50 p-4 rounded-lg border border-blue-100">
-                                        <div className="text-xs font-semibold text-blue-600 mb-1">Peminjam</div>
-                                        <div className="font-bold text-blue-900">{returnModal.nama_peminjam}</div>
-                                        <div className="text-xs text-blue-600 mt-1">ID #{returnModal.id_peminjam}</div>
+                                    <div className="bg-blue-50 dark:bg-blue-900/20 p-4 rounded-lg border border-blue-100 dark:border-blue-900/30">
+                                        <div className="text-xs font-semibold text-blue-600 dark:text-blue-400 mb-1">Peminjam</div>
+                                        <div className="font-bold text-blue-900 dark:text-blue-100">{returnModal.nama_peminjam}</div>
+                                        <div className="text-xs text-blue-600 dark:text-blue-400 mt-1">ID #{returnModal.id_peminjam}</div>
                                     </div>
 
                                     {/* Fine Warning in Modal */}
                                     {isAfter(new Date(), new Date(returnModal.tanggal_kembali_rencana)) && (
-                                        <div className="bg-amber-50 p-4 rounded-lg border border-amber-200">
-                                            <div className="flex items-center gap-2 text-amber-800 font-bold text-sm mb-1">
+                                        <div className="bg-amber-50 dark:bg-amber-900/20 p-4 rounded-lg border border-amber-200 dark:border-amber-900/30">
+                                            <div className="flex items-center gap-2 text-amber-800 dark:text-amber-400 font-bold text-sm mb-1">
                                                 <AlertCircle size={16} />
                                                 Peminjaman Terlambat!
                                             </div>
-                                            <div className="text-xs text-amber-700">
+                                            <div className="text-xs text-amber-700 dark:text-amber-300">
                                                 Batas pengembalian adalah <b>{format(new Date(returnModal.tanggal_kembali_rencana), 'dd MMMM yyyy', { locale: localeId })}</b>.
                                                 Denda otomatis akan dikenakan sebesar <b>Rp 5.000 / hari</b>.
                                             </div>
-                                            <div className="mt-2 text-sm font-black text-amber-900">
+                                            <div className="mt-2 text-sm font-black text-amber-900 dark:text-amber-100">
                                                 Estimasi Denda: {formatIDR(Math.ceil(differenceInDays(new Date(), new Date(returnModal.tanggal_kembali_rencana))) * 5000)}
                                             </div>
                                         </div>
@@ -437,11 +437,11 @@ export default function Peminjaman() {
                                 </div>
 
                                 <div className="space-y-2">
-                                    <label className="text-sm font-semibold text-slate-700">Kondisi Barang Kembali</label>
+                                    <label className="text-sm font-semibold text-slate-700 dark:text-slate-300">Kondisi Barang Kembali</label>
                                     <div className="relative">
                                         <select
                                             name="kondisi"
-                                            className="w-full h-11 rounded-lg border border-slate-200 bg-slate-50 px-4 text-sm focus:bg-white focus:outline-none focus:ring-2 focus:ring-primary-500 transition-colors appearance-none"
+                                            className="w-full h-11 rounded-lg border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 px-4 text-sm text-slate-900 dark:text-white focus:bg-white dark:focus:bg-slate-900 focus:outline-none focus:ring-2 focus:ring-primary-500 transition-colors appearance-none"
                                         >
                                             <option value="Baik">✓ Baik (Tidak Ada Kerusakan)</option>
                                             <option value="Rusak">✗ Rusak (Ada Kerusakan)</option>
@@ -453,16 +453,16 @@ export default function Peminjaman() {
                                 </div>
 
                                 <div className="space-y-2">
-                                    <label className="text-sm font-semibold text-slate-700">Catatan (Opsional)</label>
+                                    <label className="text-sm font-semibold text-slate-700 dark:text-slate-300">Catatan (Opsional)</label>
                                     <textarea
                                         name="catatan"
                                         rows={3}
-                                        className="w-full rounded-lg border border-slate-200 bg-slate-50 px-4 py-3 text-sm focus:bg-white focus:outline-none focus:ring-2 focus:ring-primary-500 transition-colors resize-none"
+                                        className="w-full rounded-lg border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 px-4 py-3 text-sm text-slate-900 dark:text-white focus:bg-white dark:focus:bg-slate-900 focus:outline-none focus:ring-2 focus:ring-primary-500 transition-colors resize-none"
                                         placeholder="Tambahkan catatan pengembalian..."
                                     ></textarea>
                                 </div>
 
-                                <div className="flex justify-end gap-3 pt-4 border-t border-slate-100">
+                                <div className="flex justify-end gap-3 pt-4 border-t border-slate-100 dark:border-slate-800">
                                     <Button type="button" variant="ghost" onClick={() => setReturnModal(null)}>
                                         Batal
                                     </Button>
