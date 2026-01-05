@@ -335,9 +335,9 @@ export default function Alat() {
                                 </Button>
                             </div>
 
-                            <form onSubmit={handleSubmit} className="flex flex-col flex-1 overflow-hidden">
-                                <CardContent className="p-6 pb-2 space-y-6 overflow-y-auto">
-                                    <div className="space-y-4 pb-4">
+                            <form onSubmit={handleSubmit} className="flex flex-col min-h-0 flex-1">
+                                <CardContent className="flex-1 overflow-y-auto p-6">
+                                    <div className="space-y-6 pb-4">
                                         <div className="space-y-1.5">
                                             <label className="text-sm font-semibold text-slate-700">Nama Alat</label>
                                             <Input
@@ -471,7 +471,7 @@ export default function Alat() {
                                         </div>
                                     </div>
                                 </CardContent>
-                                <CardFooter className="flex justify-end gap-3 p-6 bg-slate-50/50 border-t border-slate-100">
+                                <CardFooter className="shrink-0 flex justify-end gap-3 p-6 bg-slate-50/50 border-t border-slate-100">
                                     <Button type="button" variant="ghost" onClick={() => setModalOpen(false)} className="hover:bg-slate-200">Batal</Button>
                                     <Button type="submit" className={cn("min-w-[120px]", editId ? "bg-blue-600 hover:bg-blue-700" : "bg-primary-600 hover:bg-primary-700")}>
                                         <Save size={16} className="mr-2" />
