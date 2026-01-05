@@ -255,11 +255,11 @@ export default function Dashboard() {
                                         )}
                                     </div>
                                 </div>
-                                <div className="relative flex justify-center md:block">
+                                <div className="hidden md:block relative">
                                     <img
                                         src="/images/hero-team.png"
                                         alt="Tim Laboratorium"
-                                        className="h-48 md:h-full max-h-[350px] w-auto object-contain drop-shadow-xl hover:scale-105 transition-transform duration-500 rounded-lg"
+                                        className="h-full max-h-[350px] w-auto object-contain drop-shadow-xl hover:scale-105 transition-transform duration-500 rounded-lg"
                                     />
                                 </div>
                             </div>
