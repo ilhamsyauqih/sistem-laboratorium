@@ -10,10 +10,10 @@ import { ShoppingCart, Plus, Edit, Trash2, Search, Beaker, X, Save, AlertCircle,
 import { cn } from '../lib/utils';
 import { uploadToCloudinary } from '../lib/cloudinary';
 import { useNavigate, useSearchParams } from 'react-router-dom';
-import { FloorPlan } from '../components/FloorPlan';
 import { FluidSearch } from '../components/ui/FluidSearch';
 import { AnimatedList, AnimatedItem } from '../components/animations/AnimatedList';
 import LoadingSkeleton from '../components/animations/LoadingSkeleton';
+import FadeIn from '../components/animations/FadeIn';
 import { AnimatePresence, motion } from 'framer-motion';
 
 export default function Alat() {
