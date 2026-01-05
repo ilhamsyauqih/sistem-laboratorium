@@ -133,7 +133,7 @@ export default function Dashboard() {
                                     </div>
                                     <div className="bg-white rounded-xl shadow-sm border border-slate-100 divide-y divide-slate-100">
                                         {stats.recentActivity.length > 0 ? stats.recentActivity.map((act) => (
-                                            <div key={act.id_peminjam} className="p-4 flex flex-col sm:flex-row sm:items-center justify-between hover:bg-slate-50 transition-colors gap-4">
+                                            <Link key={act.id_peminjam} to="/peminjaman" className="p-4 flex flex-col sm:flex-row sm:items-center justify-between hover:bg-slate-50 transition-colors gap-4">
                                                 <div className="flex items-center gap-4">
                                                     <div className="h-10 w-10 rounded-full bg-slate-100 flex items-center justify-center text-slate-500 flex-shrink-0">
                                                         <Clock size={20} />
@@ -144,7 +144,7 @@ export default function Dashboard() {
                                                     </div>
                                                 </div>
                                                 <Badge status={act.status_pinjam} />
-                                            </div>
+                                            </Link>
                                         )) : (
                                             <div className="p-8 text-center text-slate-500">Belum ada aktivitas terbaru.</div>
                                         )}
@@ -287,15 +287,19 @@ export default function Dashboard() {
                             <div>
                                 <h2 className="text-2xl font-bold tracking-tight text-slate-900 mb-6">Ringkasan Aktivitas</h2>
                                 <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-                                    <StatCard title="Barang Dipinjam" value={stats?.activeLoans} icon={Clock} color="text-amber-600" bg="bg-amber-50" />
-                                    <StatCard title="Total Riwayat" value={stats?.totalHistory} icon={CheckCircle} color="text-blue-600" bg="bg-blue-50" />
+                                    <Link to="/peminjaman">
+                                        <StatCard title="Barang Dipinjam" value={stats?.activeLoans} icon={Clock} color="text-amber-600" bg="bg-amber-50" />
+                                    </Link>
+                                    <Link to="/peminjaman">
+                                        <StatCard title="Total Riwayat" value={stats?.totalHistory} icon={CheckCircle} color="text-blue-600" bg="bg-blue-50" />
+                                    </Link>
 
                                     {/* Compliance Section */}
                                     {(() => {
                                         const compliance = getComplianceInfo(stats?.compliance_score ?? 80);
                                         return (
-                                            <div className={cn(
-                                                "rounded-2xl p-6 text-white flex flex-col justify-between shadow-lg transition-all hover:scale-[1.02]",
+                                            <Link to="/peminjaman" className={cn(
+                                                "rounded-2xl p-6 text-white flex flex-col justify-between shadow-lg transition-all hover:scale-[1.02] cursor-pointer",
                                                 compliance.label === 'Sangat Baik' ? "bg-gradient-to-br from-green-500 to-green-600" :
                                                     compliance.label === 'Baik' ? "bg-gradient-to-br from-yellow-500 to-yellow-600" :
                                                         compliance.label === 'Cukup' ? "bg-gradient-to-br from-orange-500 to-orange-600" :
@@ -314,7 +318,7 @@ export default function Dashboard() {
                                                         stats?.compliance_score >= 70 ? 'Pertahankan kedisiplinan Anda dalam meminjam.' :
                                                             'Mohon tingkatkan ketertiban pengembalian alat.'}
                                                 </div>
-                                            </div>
+                                            </Link>
                                         );
                                     })()}
                                 </div>
@@ -351,8 +355,9 @@ export default function Dashboard() {
                         </FadeIn>
                     )}
                 </>
-            )}
-        </div>
+            )
+            }
+        </div >
     );
 }
 
