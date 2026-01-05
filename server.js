@@ -112,6 +112,16 @@ app.get('/api/dashboard', async (req, res) => {
     wrap(handler)(req, res);
 });
 
+// /api/cart
+app.get('/api/cart', async (req, res) => {
+    const handler = await importHandler('./api/cart.js');
+    wrap(handler)(req, res);
+});
+app.post('/api/cart', async (req, res) => {
+    const handler = await importHandler('./api/cart.js');
+    wrap(handler)(req, res);
+});
+
 // /api/ai-recommendation
 app.post('/api/ai-recommendation', async (req, res) => {
     const handler = await importHandler('./api/ai-recommendation.js');
