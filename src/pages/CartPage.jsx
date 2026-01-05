@@ -62,11 +62,28 @@ export default function CartPage() {
     return (
         <div className="max-w-4xl mx-auto space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
             <FadeIn>
-                <div>
-                    <h1 className="text-3xl font-bold text-slate-900">Keranjang Peminjaman</h1>
-                    <p className="text-slate-500 mt-1">
-                        Pastikan daftar alat sudah benar sebelum mengajukan peminjaman.
-                    </p>
+                <div className="relative bg-white rounded-3xl overflow-hidden shadow-sm border border-slate-100 mb-8">
+                    <div className="absolute inset-0 bg-gradient-to-r from-primary-600 to-blue-400 opacity-10"></div>
+                    <div className="relative px-8 py-10 md:px-12 flex flex-col md:flex-row items-center justify-between gap-8">
+                        <div className="space-y-4 max-w-lg">
+                            <div className="inline-flex items-center rounded-full border border-primary-200 bg-primary-50 px-3 py-1 text-sm font-medium text-primary-800">
+                                🛒 Keranjang Peminjaman
+                            </div>
+                            <h1 className="text-3xl font-extrabold tracking-tight text-slate-900">
+                                Siap untuk Memulai <span className="text-primary-600">Praktikum?</span>
+                            </h1>
+                            <p className="text-slate-600">
+                                Pastikan daftar alat sudah benar sebelum mengajukan peminjaman. Kami siap mendukung riset dan pembelajaran Anda.
+                            </p>
+                        </div>
+                        <div className="hidden md:block relative">
+                            <img
+                                src="/images/hero-team.png"
+                                alt="Tim Laboratorium"
+                                className="h-32 w-auto object-contain drop-shadow-xl rounded-lg"
+                            />
+                        </div>
+                    </div>
                 </div>
             </FadeIn>
 

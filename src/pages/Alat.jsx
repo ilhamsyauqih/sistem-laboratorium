@@ -7,7 +7,8 @@ import { Button } from '../components/ui/Button';
 import { Input } from '../components/ui/Input';
 import { Card, CardContent, CardFooter } from '../components/ui/Card';
 import { ShoppingCart, Plus, Edit, Trash2, Search, Beaker, X, Save, AlertCircle, Loader2 } from 'lucide-react';
-import { cn, compressImage } from '../lib/utils';
+import { cn } from '../lib/utils';
+import { uploadToCloudinary } from '../lib/cloudinary';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { FloorPlan } from '../components/FloorPlan';
 import { FluidSearch } from '../components/ui/FluidSearch';
@@ -125,45 +126,14 @@ export default function Alat() {
             };
             reader.readAsDataURL(file);
 
-            await uploadToCloudinary(file);
+            await handleImageUpload(file);
         }
     }
 
-    async function uploadToCloudinary(fileNumberOne) {
-        // Upload to Cloudinary
-        const cloudName = import.meta.env.VITE_CLOUDINARY_CLOUD_NAME;
-        const uploadPreset = import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET;
-
-        if (!cloudName || !uploadPreset) {
-            alert('Cloudinary configuration missing. Please contact administrator.');
-            return;
-        }
-
+    async function handleImageUpload(file) {
         setUploading(true);
-
         try {
-            // Compress image
-            const file = await compressImage(fileNumberOne);
-
-            const formDataUpload = new FormData();
-            formDataUpload.append('file', file);
-            formDataUpload.append('upload_preset', uploadPreset);
-            formDataUpload.append('folder', 'sistem-laboratorium/alat');
-
-            const response = await fetch(
-                `https://api.cloudinary.com/v1_1/${cloudName}/image/upload`,
-                {
-                    method: 'POST',
-                    body: formDataUpload,
-                }
-            );
-
-            if (!response.ok) {
-                const errorData = await response.json();
-                throw new Error(errorData.error?.message || 'Upload failed');
-            }
-
-            const data = await response.json();
+            const data = await uploadToCloudinary(file, { folder: 'sistem-laboratorium/alat' });
             setFormData(prev => ({ ...prev, gambar_url: data.secure_url }));
         } catch (error) {
             console.error('Cloudinary upload error:', error);
@@ -183,26 +153,43 @@ export default function Alat() {
     return (
         <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
             {/* Header & Actions */}
-            <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
-                <div>
-                    <h1 className="text-3xl font-bold tracking-tight text-slate-900">Katalog Alat</h1>
-                    <p className="text-slate-500 mt-2 text-lg">
-                        {user?.role === 'admin'
-                            ? 'Kelola data inventaris laboratorium dengan mudah.'
-                            : 'Jelajahi dan pilih peralatan laboratorium untuk kegiatan praktikum.'}
-                    </p>
+            <FadeIn>
+                <div className="relative bg-white rounded-3xl overflow-hidden shadow-sm border border-slate-100 mb-8">
+                    <div className="absolute inset-0 bg-gradient-to-r from-primary-600 to-blue-400 opacity-10"></div>
+                    <div className="relative px-8 py-8 md:px-12 flex flex-col md:flex-row items-center justify-between gap-8">
+                        <div className="space-y-4 max-w-lg">
+                            <div className="inline-flex items-center rounded-full border border-primary-200 bg-primary-50 px-3 py-1 text-sm font-medium text-primary-800">
+                                🛠️ Katalog Inventaris
+                            </div>
+                            <h1 className="text-3xl font-extrabold tracking-tight text-slate-900">
+                                {user?.role === 'admin' ? 'Kelola Inventaris' : 'Temukan Alat'} <span className="text-primary-600">Lab Anda</span>
+                            </h1>
+                            <p className="text-slate-600">
+                                {user?.role === 'admin'
+                                    ? 'Pantau dan kelola ketersediaan alat laboratorium secara real-time.'
+                                    : 'Cari dan pinjam peralatan praktikum dengan cepat dan mudah.'}
+                            </p>
+                        </div>
+                        <div className="hidden md:block relative">
+                            <img
+                                src="/images/hero-team.png"
+                                alt="Tim Laboratorium"
+                                className="h-28 w-auto object-contain drop-shadow-xl rounded-lg"
+                            />
+                        </div>
+                    </div>
                 </div>
+            </FadeIn>
 
-                <div className="flex items-center gap-3">
-                    {user?.role === 'admin' && (
-                        <Button
-                            onClick={() => { setModalOpen(true); setEditId(null); setFormData({ nama_alat: '', kode_alat: '', kondisi: 'Baik', lokasi: '', status: 'Tersedia', gambar_url: '' }); setImagePreview(null); }}
-                            className="bg-primary-600 hover:bg-primary-700 text-white shadow-md hover:shadow-lg transition-all"
-                        >
-                            <Plus size={18} className="mr-2" /> Tambah Alat
-                        </Button>
-                    )}
-                </div>
+            <div className="flex items-center gap-3">
+                {user?.role === 'admin' && (
+                    <Button
+                        onClick={() => { setModalOpen(true); setEditId(null); setFormData({ nama_alat: '', kode_alat: '', kondisi: 'Baik', lokasi: '', status: 'Tersedia', gambar_url: '' }); setImagePreview(null); }}
+                        className="bg-primary-600 hover:bg-primary-700 text-white shadow-md hover:shadow-lg transition-all"
+                    >
+                        <Plus size={18} className="mr-2" /> Tambah Alat
+                    </Button>
+                )}
             </div>
 
             {/* Search & Filter */}
@@ -217,115 +204,117 @@ export default function Alat() {
             </div>
 
             {/* Product Grid */}
-            {loading ? (
-                <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 md:gap-6">
-                    <LoadingSkeleton count={8} className="h-72" />
-                </div>
-            ) : (
-                <AnimatedList className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 md:gap-6">
-                    {filteredAlat.map((item) => (
-                        <AnimatedItem key={item.id_alat}>
-                            <Card className="group overflow-hidden border-none shadow-sm hover:shadow-xl transition-all duration-300 bg-white rounded-2xl h-full flex flex-col">
-                                {/* Image Placeholder */}
-                                <div className="aspect-[4/3] bg-slate-50 flex items-center justify-center relative group-hover:bg-slate-100 transition-colors overflow-hidden">
-                                    {item.gambar_url ? (
-                                        <img
-                                            src={item.gambar_url}
-                                            alt={item.nama_alat}
-                                            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                                        />
-                                    ) : (
-                                        <div className="text-slate-300 group-hover:scale-110 group-hover:text-primary-200 transition-all duration-500">
-                                            <Beaker size={80} strokeWidth={1} />
+            {
+                loading ? (
+                    <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 md:gap-6">
+                        <LoadingSkeleton count={8} className="h-72" />
+                    </div>
+                ) : (
+                    <AnimatedList className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 md:gap-6">
+                        {filteredAlat.map((item) => (
+                            <AnimatedItem key={item.id_alat}>
+                                <Card className="group overflow-hidden border-none shadow-sm hover:shadow-xl transition-all duration-300 bg-white rounded-2xl h-full flex flex-col">
+                                    {/* Image Placeholder */}
+                                    <div className="aspect-[4/3] bg-slate-50 flex items-center justify-center relative group-hover:bg-slate-100 transition-colors overflow-hidden">
+                                        {item.gambar_url ? (
+                                            <img
+                                                src={item.gambar_url}
+                                                alt={item.nama_alat}
+                                                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                                            />
+                                        ) : (
+                                            <div className="text-slate-300 group-hover:scale-110 group-hover:text-primary-200 transition-all duration-500">
+                                                <Beaker size={80} strokeWidth={1} />
+                                            </div>
+                                        )}
+                                        <div className="absolute top-3 right-3 flex gap-2">
+                                            <span className={cn(
+                                                "px-2.5 py-1 text-xs font-bold rounded-full border shadow-sm backdrop-blur-sm",
+                                                item.status === 'Tersedia' ? "bg-green-100/80 text-green-700 border-green-200" : "bg-red-100/80 text-red-700 border-red-200"
+                                            )}>
+                                                {item.status}
+                                            </span>
                                         </div>
-                                    )}
-                                    <div className="absolute top-3 right-3 flex gap-2">
-                                        <span className={cn(
-                                            "px-2.5 py-1 text-xs font-bold rounded-full border shadow-sm backdrop-blur-sm",
-                                            item.status === 'Tersedia' ? "bg-green-100/80 text-green-700 border-green-200" : "bg-red-100/80 text-red-700 border-red-200"
-                                        )}>
-                                            {item.status}
-                                        </span>
-                                    </div>
-                                </div>
-
-                                <CardContent className="p-3 md:p-5 flex-1">
-                                    <div className="mb-3">
-                                        <h3 className="font-bold text-base md:text-lg text-slate-900 line-clamp-1 group-hover:text-primary-600 transition-colors">{item.nama_alat}</h3>
-                                        <p className="text-sm text-slate-500 font-medium">{item.kode_alat}</p>
                                     </div>
 
-                                    <div className="flex flex-wrap gap-2 text-xs">
-                                        <span className="px-2 py-1 rounded-md bg-slate-100 text-slate-600 font-medium">
-                                            📍 {item.lokasi}
-                                        </span>
-                                        <span className={cn(
-                                            "px-2 py-1 rounded-md font-medium",
-                                            item.kondisi === 'Baik' ? "bg-blue-50 text-blue-700" : "bg-orange-50 text-orange-700"
-                                        )}>
-                                            🛠 {item.kondisi}
-                                        </span>
-                                    </div>
-                                </CardContent>
-
-                                <CardFooter className="p-3 pt-0 md:p-5 md:pt-0">
-                                    {user?.role === 'admin' ? (
-                                        <div className="flex w-full gap-3 opacity-90 group-hover:opacity-100 transition-opacity">
-                                            <Button
-                                                size="sm"
-                                                className="flex-1 bg-amber-50 text-amber-700 hover:bg-amber-100 border border-amber-200 shadow-sm"
-                                                onClick={() => openEdit(item)}
-                                            >
-                                                <Edit size={16} className="mr-2" /> Edit
-                                            </Button>
-                                            <Button
-                                                size="icon"
-                                                className="bg-red-50 text-red-700 hover:bg-red-100 border border-red-200 shadow-sm w-10 flex-shrink-0"
-                                                onClick={() => handleDelete(item.id_alat)}
-                                            >
-                                                <Trash2 size={18} />
-                                            </Button>
+                                    <CardContent className="p-3 md:p-5 flex-1">
+                                        <div className="mb-3">
+                                            <h3 className="font-bold text-base md:text-lg text-slate-900 line-clamp-1 group-hover:text-primary-600 transition-colors">{item.nama_alat}</h3>
+                                            <p className="text-sm text-slate-500 font-medium">{item.kode_alat}</p>
                                         </div>
-                                    ) : (
-                                        <Button
-                                            className={cn(
-                                                "w-full transition-all shadow-sm hover:shadow",
-                                                cart.find(c => c.id_alat === item.id_alat)
-                                                    ? "bg-green-600 hover:bg-green-700 ring-2 ring-emerald-100"
-                                                    : "bg-primary-600 hover:bg-primary-700"
-                                            )}
-                                            disabled={item.status !== 'Tersedia'}
-                                            onClick={() => {
-                                                if (!user) {
-                                                    navigate('/login');
-                                                    return;
-                                                }
-                                                if (cart.find(c => c.id_alat === item.id_alat)) {
-                                                    removeFromCart(item.id_alat);
-                                                } else {
-                                                    addToCart(item);
-                                                }
-                                            }}
-                                        >
-                                            {user ? (
-                                                cart.find(c => c.id_alat === item.id_alat) ? (
-                                                    <span className="flex items-center"><span className="mr-2 text-lg">✓</span> Dalam Keranjang</span>
-                                                ) : item.status === 'Tersedia' ? (
-                                                    <span className="flex items-center"><Plus size={16} className="mr-2" /> Pinjam Alat</span>
+
+                                        <div className="flex flex-wrap gap-2 text-xs">
+                                            <span className="px-2 py-1 rounded-md bg-slate-100 text-slate-600 font-medium">
+                                                📍 {item.lokasi}
+                                            </span>
+                                            <span className={cn(
+                                                "px-2 py-1 rounded-md font-medium",
+                                                item.kondisi === 'Baik' ? "bg-blue-50 text-blue-700" : "bg-orange-50 text-orange-700"
+                                            )}>
+                                                🛠 {item.kondisi}
+                                            </span>
+                                        </div>
+                                    </CardContent>
+
+                                    <CardFooter className="p-3 pt-0 md:p-5 md:pt-0">
+                                        {user?.role === 'admin' ? (
+                                            <div className="flex w-full gap-3 opacity-90 group-hover:opacity-100 transition-opacity">
+                                                <Button
+                                                    size="sm"
+                                                    className="flex-1 bg-amber-50 text-amber-700 hover:bg-amber-100 border border-amber-200 shadow-sm"
+                                                    onClick={() => openEdit(item)}
+                                                >
+                                                    <Edit size={16} className="mr-2" /> Edit
+                                                </Button>
+                                                <Button
+                                                    size="icon"
+                                                    className="bg-red-50 text-red-700 hover:bg-red-100 border border-red-200 shadow-sm w-10 flex-shrink-0"
+                                                    onClick={() => handleDelete(item.id_alat)}
+                                                >
+                                                    <Trash2 size={18} />
+                                                </Button>
+                                            </div>
+                                        ) : (
+                                            <Button
+                                                className={cn(
+                                                    "w-full transition-all shadow-sm hover:shadow",
+                                                    cart.find(c => c.id_alat === item.id_alat)
+                                                        ? "bg-green-600 hover:bg-green-700 ring-2 ring-emerald-100"
+                                                        : "bg-primary-600 hover:bg-primary-700"
+                                                )}
+                                                disabled={item.status !== 'Tersedia'}
+                                                onClick={() => {
+                                                    if (!user) {
+                                                        navigate('/login');
+                                                        return;
+                                                    }
+                                                    if (cart.find(c => c.id_alat === item.id_alat)) {
+                                                        removeFromCart(item.id_alat);
+                                                    } else {
+                                                        addToCart(item);
+                                                    }
+                                                }}
+                                            >
+                                                {user ? (
+                                                    cart.find(c => c.id_alat === item.id_alat) ? (
+                                                        <span className="flex items-center"><span className="mr-2 text-lg">✓</span> Dalam Keranjang</span>
+                                                    ) : item.status === 'Tersedia' ? (
+                                                        <span className="flex items-center"><Plus size={16} className="mr-2" /> Pinjam Alat</span>
+                                                    ) : (
+                                                        'Tidak Tersedia'
+                                                    )
                                                 ) : (
-                                                    'Tidak Tersedia'
-                                                )
-                                            ) : (
-                                                'Masuk untuk Pinjam'
-                                            )}
-                                        </Button>
-                                    )}
-                                </CardFooter>
-                            </Card>
-                        </AnimatedItem>
-                    ))}
-                </AnimatedList>
-            )}
+                                                    'Masuk untuk Pinjam'
+                                                )}
+                                            </Button>
+                                        )}
+                                    </CardFooter>
+                                </Card>
+                            </AnimatedItem>
+                        ))}
+                    </AnimatedList>
+                )
+            }
 
 
             {/* Modal Form (Admin) - Rendered via Portal */}
@@ -506,6 +495,6 @@ export default function Alat() {
                     document.body
                 )}
             </AnimatePresence>
-        </div>
+        </div >
     );
 }
