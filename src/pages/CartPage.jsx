@@ -75,8 +75,16 @@ export default function CartPage() {
                     {cart.map((item, index) => (
                         <FadeIn key={item.id_alat} delay={index * 0.05} direction="left">
                             <Card className="overflow-hidden flex flex-row items-center p-4 gap-4">
-                                <div className="w-20 h-20 bg-slate-100 rounded-lg flex items-center justify-center text-slate-400 flex-shrink-0">
-                                    <Beaker size={24} />
+                                <div className="w-20 h-20 bg-slate-100 rounded-lg flex items-center justify-center text-slate-400 flex-shrink-0 overflow-hidden">
+                                    {item.gambar_url ? (
+                                        <img
+                                            src={item.gambar_url}
+                                            alt={item.nama_alat}
+                                            className="w-full h-full object-cover"
+                                        />
+                                    ) : (
+                                        <Beaker size={24} />
+                                    )}
                                 </div>
                                 <div className="flex-1">
                                     <h3 className="font-bold text-slate-900">{item.nama_alat}</h3>
