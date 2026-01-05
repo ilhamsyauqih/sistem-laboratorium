@@ -42,11 +42,8 @@ export default function Navbar() {
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="flex justify-between h-16 items-center">
                     <div className="flex items-center shrink-0">
-                        <Link to="/" className="flex-shrink-0 flex items-center gap-2">
-                            <div className="bg-primary-600 text-white p-1.5 rounded-lg">
-                                <Beaker size={24} />
-                            </div>
-                            <span className="font-bold text-xl text-primary-900 tracking-tight">LabSystem</span>
+                        <Link to="/" className="flex-shrink-0 flex items-center">
+                            <img src="/images/logo.png" alt="LabSystem Logo" className="h-10 w-auto" />
                         </Link>
                     </div>
 

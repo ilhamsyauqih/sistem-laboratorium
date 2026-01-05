@@ -110,10 +110,9 @@ export default function Login() {
                 </Button>
             </div>
 
-            <div className="hidden lg:flex flex-col justify-center items-center bg-primary-600 text-white p-12">
-                <Beaker size={64} className="mb-6" />
-                <h1 className="text-4xl font-bold mb-4">Sistem Laboratorium</h1>
-                <p className="text-xl text-primary-100 text-center max-w-md">
+            <div className="hidden lg:flex flex-col justify-center items-center bg-white p-12 border-r border-slate-100">
+                <img src="/images/logo.png" alt="LabSystem Logo" className="w-full max-w-sm mb-8" />
+                <p className="text-xl text-slate-500 text-center max-w-sm">
                     Kelola peminjaman dan pengembalian alat laboratorium sekolah dengan mudah dan efisien.
                 </p>
             </div>
