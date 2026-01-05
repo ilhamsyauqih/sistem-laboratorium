@@ -219,11 +219,12 @@ export default function Login() {
                                             </div>
                                         )}
                                         <div className="space-y-2">
-                                            <label className="text-sm font-medium">No. Kontak (WA)</label>
+                                            <label className="text-sm font-medium">No. Kontak (WA AKTIF)</label>
                                             <Input
                                                 placeholder="08..."
                                                 value={formData.kontak}
                                                 onChange={(e) => setFormData({ ...formData, kontak: e.target.value })}
+                                                required
                                                 disabled={loading}
                                             />
                                         </div>
