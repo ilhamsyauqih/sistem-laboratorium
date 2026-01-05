@@ -170,7 +170,7 @@ export default function Alat() {
                                     : 'Cari dan pinjam peralatan praktikum dengan cepat dan mudah.'}
                             </p>
                         </div>
-                        <div className="hidden md:block relative">
+                        <div className="mt-8 md:mt-0 relative">
                             <img
                                 src="/images/hero-team.png"
                                 alt="Tim Laboratorium"
@@ -318,183 +318,169 @@ export default function Alat() {
 
 
             {/* Modal Form (Admin) - Rendered via Portal */}
-            <AnimatePresence>
-                {modalOpen && ReactDOM.createPortal(
-                    <motion.div
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        exit={{ opacity: 0 }}
-                        transition={{ duration: 0.2 }}
-                        className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm"
-                    >
-                        <motion.div
-                            initial={{ scale: 0.95, opacity: 0, y: 10 }}
-                            animate={{ scale: 1, opacity: 1, y: 0 }}
-                            exit={{ scale: 0.95, opacity: 0, y: 10 }}
-                            transition={{ type: "spring", duration: 0.3 }}
-                            className="w-full max-w-lg max-h-[90vh] bg-white rounded-2xl flex flex-col shadow-2xl"
-                        >
-                            <Card className="border-none shadow-none flex flex-col h-full bg-transparent">
-                                <div className="px-6 py-4 border-b border-slate-100 flex justify-between items-center bg-slate-50/50">
-                                    <h2 className="text-xl font-bold text-slate-800 flex items-center gap-2">
-                                        {editId ? <Edit size={20} className="text-blue-600" /> : <Plus size={20} className="text-green-600" />}
-                                        {editId ? 'Edit Data Alat' : 'Tambah Inventaris Baru'}
-                                    </h2>
-                                    <Button variant="ghost" size="icon" onClick={() => setModalOpen(false)} className="rounded-full hover:bg-slate-200/50 text-slate-500">
-                                        <X size={20} />
-                                    </Button>
-                                </div>
+            {modalOpen && ReactDOM.createPortal(
+                <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm animate-in fade-in duration-300">
+                    <div className="w-full max-w-lg max-h-[90vh] bg-white rounded-2xl flex flex-col shadow-2xl animate-in zoom-in-95 duration-300">
+                        <Card className="border-none shadow-none flex flex-col h-full bg-transparent">
+                            <div className="px-6 py-4 border-b border-slate-100 flex justify-between items-center bg-slate-50/50">
+                                <h2 className="text-xl font-bold text-slate-800 flex items-center gap-2">
+                                    {editId ? <Edit size={20} className="text-blue-600" /> : <Plus size={20} className="text-green-600" />}
+                                    {editId ? 'Edit Data Alat' : 'Tambah Inventaris Baru'}
+                                </h2>
+                                <Button variant="ghost" size="icon" onClick={() => setModalOpen(false)} className="rounded-full hover:bg-slate-200/50 text-slate-500">
+                                    <X size={20} />
+                                </Button>
+                            </div>
 
-                                <form onSubmit={handleSubmit} className="flex flex-col flex-1 overflow-hidden">
-                                    <CardContent className="p-6 space-y-6 overflow-y-auto">
-                                        <div className="space-y-4">
-                                            <div className="space-y-1.5">
-                                                <label className="text-sm font-semibold text-slate-700">Nama Alat</label>
-                                                <Input
-                                                    required
-                                                    value={formData.nama_alat}
-                                                    onChange={e => setFormData({ ...formData, nama_alat: e.target.value })}
-                                                    placeholder="Contoh: Mikroskop Binokuler X200"
-                                                    className="h-11 bg-slate-50 border-slate-200 focus:bg-white transition-colors"
-                                                />
-                                            </div>
+                            <form onSubmit={handleSubmit} className="flex flex-col flex-1 overflow-hidden">
+                                <CardContent className="p-6 space-y-6 overflow-y-auto">
+                                    <div className="space-y-4">
+                                        <div className="space-y-1.5">
+                                            <label className="text-sm font-semibold text-slate-700">Nama Alat</label>
+                                            <Input
+                                                required
+                                                value={formData.nama_alat}
+                                                onChange={e => setFormData({ ...formData, nama_alat: e.target.value })}
+                                                placeholder="Contoh: Mikroskop Binokuler X200"
+                                                className="h-11 bg-slate-50 border-slate-200 focus:bg-white transition-colors"
+                                            />
+                                        </div>
 
-                                            {/* Image Upload */}
-                                            <div className="space-y-1.5">
-                                                <label className="text-sm font-semibold text-slate-700">Gambar Alat (Opsional)</label>
-                                                <div className="flex flex-col gap-3">
-                                                    {imagePreview ? (
-                                                        <div className="relative w-full h-48 bg-slate-100 rounded-lg overflow-hidden border-2 border-slate-200">
-                                                            <img
-                                                                src={imagePreview}
-                                                                alt="Preview"
-                                                                className={cn("w-full h-full object-cover", uploading && "opacity-50 blur-sm transition-all")}
-                                                            />
-                                                            {uploading && (
-                                                                <div className="absolute inset-0 flex items-center justify-center">
-                                                                    <Loader2 className="w-8 h-8 text-primary-600 animate-spin" />
-                                                                </div>
-                                                            )}
-                                                            {!uploading && (
-                                                                <button
-                                                                    type="button"
-                                                                    onClick={removeImage}
-                                                                    className="absolute top-2 right-2 bg-red-500 hover:bg-red-600 text-white rounded-full p-1.5 shadow-lg transition-colors"
-                                                                >
-                                                                    <X size={16} />
-                                                                </button>
-                                                            )}
-                                                        </div>
-                                                    ) : (
-                                                        <label className={cn(
-                                                            "w-full h-48 flex flex-col items-center justify-center border-2 border-dashed border-slate-300 rounded-lg transition-all bg-slate-50 relative",
-                                                            uploading ? "cursor-wait opacity-70" : "cursor-pointer hover:border-primary-500 hover:bg-primary-50/50"
-                                                        )}>
-                                                            {uploading ? (
-                                                                <div className="flex flex-col items-center gap-2 text-primary-600">
-                                                                    <Loader2 className="w-8 h-8 animate-spin" />
-                                                                    <span className="text-sm font-medium">Mengompres & Mengupload...</span>
-                                                                </div>
-                                                            ) : (
-                                                                <div className="flex flex-col items-center gap-2 text-slate-500">
-                                                                    <Plus size={32} className="text-slate-400" />
-                                                                    <span className="text-sm font-medium">Klik untuk upload gambar</span>
-                                                                    <span className="text-xs text-slate-400">PNG, JPG (Max 5MB)</span>
-                                                                </div>
-                                                            )}
-                                                            <input
-                                                                type="file"
-                                                                accept="image/*"
-                                                                disabled={uploading}
-                                                                onChange={handleImageChange}
-                                                                className="hidden"
-                                                            />
-                                                        </label>
-                                                    )}
-                                                </div>
-                                            </div>
-
-                                            <div className="grid grid-cols-2 gap-4">
-                                                <div className="space-y-1.5">
-                                                    <label className="text-sm font-semibold text-slate-700">Kode Inventaris</label>
-                                                    <Input
-                                                        required
-                                                        value={formData.kode_alat}
-                                                        onChange={e => setFormData({ ...formData, kode_alat: e.target.value })}
-                                                        placeholder="Contoh: BIO-001"
-                                                        className="bg-slate-50 border-slate-200 focus:bg-white"
-                                                    />
-                                                </div>
-                                                <div className="space-y-1.5">
-                                                    <label className="text-sm font-semibold text-slate-700">Lokasi Penyimpanan</label>
-                                                    <Input
-                                                        required
-                                                        value={formData.lokasi}
-                                                        onChange={e => setFormData({ ...formData, lokasi: e.target.value })}
-                                                        placeholder="Contoh: Lemari A, Rak 2"
-                                                        className="bg-slate-50 border-slate-200 focus:bg-white"
-                                                    />
-                                                </div>
-                                            </div>
-
-                                            <div className="grid grid-cols-2 gap-4">
-                                                <div className="space-y-1.5">
-                                                    <label className="text-sm font-semibold text-slate-700">Kondisi Fisik</label>
-                                                    <div className="relative">
-                                                        <select
-                                                            className="w-full h-10 rounded-md border border-slate-200 bg-slate-50 px-3 text-sm focus:bg-white focus:outline-none focus:ring-2 focus:ring-primary-500 transition-colors appearance-none"
-                                                            value={formData.kondisi}
-                                                            onChange={e => setFormData({ ...formData, kondisi: e.target.value })}
-                                                        >
-                                                            <option value="Baik">Baik</option>
-                                                            <option value="Rusak Ringan">Rusak Ringan</option>
-                                                            <option value="Rusak Berat">Rusak Berat</option>
-                                                        </select>
-                                                        <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-slate-500">
-                                                            <svg className="h-4 w-4 fill-current" viewBox="0 0 20 20"><path d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clipRule="evenodd" fillRule="evenodd"></path></svg>
-                                                        </div>
+                                        {/* Image Upload */}
+                                        <div className="space-y-1.5">
+                                            <label className="text-sm font-semibold text-slate-700">Gambar Alat (Opsional)</label>
+                                            <div className="flex flex-col gap-3">
+                                                {imagePreview ? (
+                                                    <div className="relative w-full h-48 bg-slate-100 rounded-lg overflow-hidden border-2 border-slate-200">
+                                                        <img
+                                                            src={imagePreview}
+                                                            alt="Preview"
+                                                            className={cn("w-full h-full object-cover", uploading && "opacity-50 blur-sm transition-all")}
+                                                        />
+                                                        {uploading && (
+                                                            <div className="absolute inset-0 flex items-center justify-center">
+                                                                <Loader2 className="w-8 h-8 text-primary-600 animate-spin" />
+                                                            </div>
+                                                        )}
+                                                        {!uploading && (
+                                                            <button
+                                                                type="button"
+                                                                onClick={removeImage}
+                                                                className="absolute top-2 right-2 bg-red-500 hover:bg-red-600 text-white rounded-full p-1.5 shadow-lg transition-colors"
+                                                            >
+                                                                <X size={16} />
+                                                            </button>
+                                                        )}
                                                     </div>
-                                                </div>
-                                                <div className="space-y-1.5">
-                                                    <label className="text-sm font-semibold text-slate-700">Status Peminjaman</label>
-                                                    <div className="relative">
-                                                        <select
-                                                            className="w-full h-10 rounded-md border border-slate-200 bg-slate-50 px-3 text-sm focus:bg-white focus:outline-none focus:ring-2 focus:ring-primary-500 transition-colors appearance-none"
-                                                            value={formData.status}
-                                                            onChange={e => setFormData({ ...formData, status: e.target.value })}
-                                                        >
-                                                            <option value="Tersedia">Tersedia</option>
-                                                            <option value="Dipinjam">Dipinjam</option>
-                                                            <option value="Perbaikan">Perbaikan</option>
-                                                            <option value="Rusak">Rusak</option>
-                                                        </select>
-                                                        <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-slate-500">
-                                                            <svg className="h-4 w-4 fill-current" viewBox="0 0 20 20"><path d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clipRule="evenodd" fillRule="evenodd"></path></svg>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                            <div className="bg-blue-50 text-blue-800 text-xs p-3 rounded-lg flex items-start gap-2">
-                                                <AlertCircle size={14} className="mt-0.5" />
-                                                <p>Pastikan kode inventaris unik. Data yang disimpan akan langsung diperbarui di katalog publik.</p>
+                                                ) : (
+                                                    <label className={cn(
+                                                        "w-full h-48 flex flex-col items-center justify-center border-2 border-dashed border-slate-300 rounded-lg transition-all bg-slate-50 relative",
+                                                        uploading ? "cursor-wait opacity-70" : "cursor-pointer hover:border-primary-500 hover:bg-primary-50/50"
+                                                    )}>
+                                                        {uploading ? (
+                                                            <div className="flex flex-col items-center gap-2 text-primary-600">
+                                                                <Loader2 className="w-8 h-8 animate-spin" />
+                                                                <span className="text-sm font-medium">Mengompres & Mengupload...</span>
+                                                            </div>
+                                                        ) : (
+                                                            <div className="flex flex-col items-center gap-2 text-slate-500">
+                                                                <Plus size={32} className="text-slate-400" />
+                                                                <span className="text-sm font-medium">Klik untuk upload gambar</span>
+                                                                <span className="text-xs text-slate-400">PNG, JPG (Max 5MB)</span>
+                                                            </div>
+                                                        )}
+                                                        <input
+                                                            type="file"
+                                                            accept="image/*"
+                                                            disabled={uploading}
+                                                            onChange={handleImageChange}
+                                                            className="hidden"
+                                                        />
+                                                    </label>
+                                                )}
                                             </div>
                                         </div>
-                                    </CardContent>
-                                    <CardFooter className="flex justify-end gap-3 p-6 bg-slate-50/50 border-t border-slate-100">
-                                        <Button type="button" variant="ghost" onClick={() => setModalOpen(false)} className="hover:bg-slate-200">Batal</Button>
-                                        <Button type="submit" className={cn("min-w-[120px]", editId ? "bg-blue-600 hover:bg-blue-700" : "bg-primary-600 hover:bg-primary-700")}>
-                                            <Save size={16} className="mr-2" />
-                                            {editId ? 'Simpan Perubahan' : 'Simpan Data'}
-                                        </Button>
-                                    </CardFooter>
-                                </form>
-                            </Card>
-                        </motion.div>
-                    </motion.div>,
-                    document.body
-                )}
-            </AnimatePresence>
+
+                                        <div className="grid grid-cols-2 gap-4">
+                                            <div className="space-y-1.5">
+                                                <label className="text-sm font-semibold text-slate-700">Kode Inventaris</label>
+                                                <Input
+                                                    required
+                                                    value={formData.kode_alat}
+                                                    onChange={e => setFormData({ ...formData, kode_alat: e.target.value })}
+                                                    placeholder="Contoh: BIO-001"
+                                                    className="bg-slate-50 border-slate-200 focus:bg-white"
+                                                />
+                                            </div>
+                                            <div className="space-y-1.5">
+                                                <label className="text-sm font-semibold text-slate-700">Lokasi Penyimpanan</label>
+                                                <Input
+                                                    required
+                                                    value={formData.lokasi}
+                                                    onChange={e => setFormData({ ...formData, lokasi: e.target.value })}
+                                                    placeholder="Contoh: Lemari A, Rak 2"
+                                                    className="bg-slate-50 border-slate-200 focus:bg-white"
+                                                />
+                                            </div>
+                                        </div>
+
+                                        <div className="grid grid-cols-2 gap-4">
+                                            <div className="space-y-1.5">
+                                                <label className="text-sm font-semibold text-slate-700">Kondisi Fisik</label>
+                                                <div className="relative">
+                                                    <select
+                                                        className="w-full h-10 rounded-md border border-slate-200 bg-slate-50 px-3 text-sm focus:bg-white focus:outline-none focus:ring-2 focus:ring-primary-500 transition-colors appearance-none"
+                                                        value={formData.kondisi}
+                                                        onChange={e => setFormData({ ...formData, kondisi: e.target.value })}
+                                                    >
+                                                        <option value="Baik">Baik</option>
+                                                        <option value="Rusak Ringan">Rusak Ringan</option>
+                                                        <option value="Rusak Berat">Rusak Berat</option>
+                                                    </select>
+                                                    <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-slate-500">
+                                                        <svg className="h-4 w-4 fill-current" viewBox="0 0 20 20"><path d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clipRule="evenodd" fillRule="evenodd"></path></svg>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div className="space-y-1.5">
+                                                <label className="text-sm font-semibold text-slate-700">Status Peminjaman</label>
+                                                <div className="relative">
+                                                    <select
+                                                        className="w-full h-10 rounded-md border border-slate-200 bg-slate-50 px-3 text-sm focus:bg-white focus:outline-none focus:ring-2 focus:ring-primary-500 transition-colors appearance-none"
+                                                        value={formData.status}
+                                                        onChange={e => setFormData({ ...formData, status: e.target.value })}
+                                                    >
+                                                        <option value="Tersedia">Tersedia</option>
+                                                        <option value="Dipinjam">Dipinjam</option>
+                                                        <option value="Perbaikan">Perbaikan</option>
+                                                        <option value="Rusak">Rusak</option>
+                                                    </select>
+                                                    <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-slate-500">
+                                                        <svg className="h-4 w-4 fill-current" viewBox="0 0 20 20"><path d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clipRule="evenodd" fillRule="evenodd"></path></svg>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div className="bg-blue-50 text-blue-800 text-xs p-3 rounded-lg flex items-start gap-2">
+                                            <AlertCircle size={14} className="mt-0.5" />
+                                            <p>Pastikan kode inventaris unik. Data yang disimpan akan langsung diperbarui di katalog publik.</p>
+                                        </div>
+                                    </div>
+                                </CardContent>
+                                <CardFooter className="flex justify-end gap-3 p-6 bg-slate-50/50 border-t border-slate-100">
+                                    <Button type="button" variant="ghost" onClick={() => setModalOpen(false)} className="hover:bg-slate-200">Batal</Button>
+                                    <Button type="submit" className={cn("min-w-[120px]", editId ? "bg-blue-600 hover:bg-blue-700" : "bg-primary-600 hover:bg-primary-700")}>
+                                        <Save size={16} className="mr-2" />
+                                        {editId ? 'Simpan Perubahan' : 'Simpan Data'}
+                                    </Button>
+                                </CardFooter>
+                            </form>
+                        </Card>
+                    </div>
+                </div>,
+                document.body
+            )}
         </div >
     );
 }

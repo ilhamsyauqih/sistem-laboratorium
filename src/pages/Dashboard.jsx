@@ -255,7 +255,7 @@ export default function Dashboard() {
                                         )}
                                     </div>
                                 </div>
-                                <div className="hidden md:block relative">
+                                <div className="mt-10 md:mt-0 relative">
                                     <img
                                         src="/images/hero-team.png"
                                         alt="Tim Laboratorium"
