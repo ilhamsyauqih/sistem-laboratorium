@@ -55,8 +55,8 @@ export function FluidSearch({
                     className={cn(
                         "transition-all duration-500",
                         isFocused
-                            ? "bg-gradient-to-r from-amber-500 to-orange-600 bg-clip-text text-transparent rotate-12 scale-110"
-                            : "text-slate-400",
+                            ? "text-amber-500 rotate-12 scale-110"
+                            : "text-slate-400 group-hover:text-amber-500",
                         size === 'large' ? 'w-6 h-6' : 'w-5 h-5'
                     )}
                 />
