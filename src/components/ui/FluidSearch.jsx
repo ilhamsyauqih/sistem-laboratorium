@@ -101,7 +101,7 @@ export function FluidSearch({
                         className={cn(
                             "p-3 rounded-full transition-all duration-300 flex items-center justify-center",
                             activeValue
-                                ? "bg-primary-600 text-white shadow-lg hover:bg-primary-500 hover:scale-110 active:scale-95 cursor-pointer"
+                                ? "bg-primary-600 text-white hover:bg-primary-500 hover:scale-110 active:scale-95 cursor-pointer"
                                 : "bg-slate-100 text-slate-300 cursor-default"
                         )}
                         disabled={!activeValue || loading}

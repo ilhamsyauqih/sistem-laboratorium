@@ -223,7 +223,7 @@ export default function Dashboard() {
                                             placeholder="Jelaskan kebutuhan proyekmu..."
                                             size="large"
                                             actionLabel="Cari dengan AI"
-                                            className="shadow-xl"
+                                            className="border-primary-100"
                                             loading={aiLoading}
                                             onSubmit={handleAiSearch}
                                         />

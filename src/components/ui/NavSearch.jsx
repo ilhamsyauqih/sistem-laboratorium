@@ -59,7 +59,7 @@ export function NavSearch() {
                         onChange={(e) => setSearch(e.target.value)}
                         onFocus={() => setIsOpen(true)}
                         placeholder="Search for equipment, categories..."
-                        className="w-full bg-slate-100 border-none text-slate-900 placeholder:text-slate-500 rounded-full py-3 pl-12 pr-4 focus:ring-2 focus:ring-primary-500 focus:bg-white transition-all shadow-sm hover:bg-slate-200/50"
+                        className="w-full bg-slate-100 border-none text-slate-900 placeholder:text-slate-500 rounded-full py-3 pl-12 pr-4 focus:ring-2 focus:ring-primary-500 focus:bg-white transition-all hover:bg-slate-200/50"
                     />
                     {search && (
                         <button
@@ -75,7 +75,7 @@ export function NavSearch() {
 
             {/* Popover */}
             {isOpen && (
-                <div className="absolute top-0 left-0 w-full pt-14 bg-white rounded-[2rem] shadow-2xl border border-slate-100 overflow-hidden z-40 animate-in fade-in zoom-in-95 duration-200">
+                <div className="absolute top-0 left-0 w-full pt-14 bg-white rounded-[2rem] border border-slate-100 overflow-hidden z-40 animate-in fade-in zoom-in-95 duration-200">
                     <div className="p-4">
                         <h3 className="text-xs font-bold text-slate-900 uppercase tracking-widest mb-3 px-2">Popular Categories</h3>
                         <div className="grid grid-cols-2 gap-2">
