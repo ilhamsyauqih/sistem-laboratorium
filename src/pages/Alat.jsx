@@ -170,7 +170,7 @@ export default function Alat() {
                                     : 'Cari dan pinjam peralatan praktikum dengan cepat dan mudah.'}
                             </p>
                         </div>
-                        <div className="hidden md:block relative">
+                        <div className="relative flex justify-center md:block">
                             <img
                                 src="/images/hero-team.png"
                                 alt="Tim Laboratorium"

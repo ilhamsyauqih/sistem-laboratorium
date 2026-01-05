@@ -76,7 +76,7 @@ export default function CartPage() {
                                 Pastikan daftar alat sudah benar sebelum mengajukan peminjaman. Kami siap mendukung riset dan pembelajaran Anda.
                             </p>
                         </div>
-                        <div className="hidden md:block relative">
+                        <div className="relative flex justify-center md:block">
                             <img
                                 src="/images/hero-team.png"
                                 alt="Tim Laboratorium"
